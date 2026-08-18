@@ -49,9 +49,7 @@ export function ClassCard({ item }: { item: DanceClass }) {
             </span>
           </p>
           <Button asChild variant="hero" size="sm" className="rounded-full">
-            <Link to="/trial" search={{ style: item.style }}>
-              Book Trial
-            </Link>
+            <Link to="/trial">Book Trial</Link>
           </Button>
         </div>
       </div>
