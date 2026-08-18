@@ -13,8 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as FaqRouteImport } from './routes/faq'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as StylesRouteImport } from './routes/styles'
+import { Route as TestimonialsRouteImport } from './routes/testimonials'
 import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as TrainersRouteImport } from './routes/trainers'
 import { Route as VideosRouteImport } from './routes/videos'
@@ -39,14 +42,29 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GalleryRoute = GalleryRouteImport.update({
   id: '/gallery',
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StylesRoute = StylesRouteImport.update({
   id: '/styles',
   path: '/styles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestimonialsRoute = TestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TimetableRoute = TimetableRouteImport.update({
@@ -70,8 +88,11 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
   '/events': typeof EventsRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
   '/styles': typeof StylesRoute
+  '/testimonials': typeof TestimonialsRoute
   '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
   '/videos': typeof VideosRoute
@@ -81,8 +102,11 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
   '/events': typeof EventsRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
   '/styles': typeof StylesRoute
+  '/testimonials': typeof TestimonialsRoute
   '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
   '/videos': typeof VideosRoute
@@ -93,8 +117,11 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
   '/events': typeof EventsRoute
+  '/faq': typeof FaqRoute
   '/gallery': typeof GalleryRoute
+  '/pricing': typeof PricingRoute
   '/styles': typeof StylesRoute
+  '/testimonials': typeof TestimonialsRoute
   '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
   '/videos': typeof VideosRoute
@@ -106,8 +133,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/classes'
     | '/events'
+    | '/faq'
     | '/gallery'
+    | '/pricing'
     | '/styles'
+    | '/testimonials'
     | '/timetable'
     | '/trainers'
     | '/videos'
@@ -117,8 +147,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/classes'
     | '/events'
+    | '/faq'
     | '/gallery'
+    | '/pricing'
     | '/styles'
+    | '/testimonials'
     | '/timetable'
     | '/trainers'
     | '/videos'
@@ -128,8 +161,11 @@ export interface FileRouteTypes {
     | '/about'
     | '/classes'
     | '/events'
+    | '/faq'
     | '/gallery'
+    | '/pricing'
     | '/styles'
+    | '/testimonials'
     | '/timetable'
     | '/trainers'
     | '/videos'
@@ -140,8 +176,11 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ClassesRoute: typeof ClassesRoute
   EventsRoute: typeof EventsRoute
+  FaqRoute: typeof FaqRoute
   GalleryRoute: typeof GalleryRoute
+  PricingRoute: typeof PricingRoute
   StylesRoute: typeof StylesRoute
+  TestimonialsRoute: typeof TestimonialsRoute
   TimetableRoute: typeof TimetableRoute
   TrainersRoute: typeof TrainersRoute
   VideosRoute: typeof VideosRoute
@@ -177,6 +216,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/gallery': {
       id: '/gallery'
       path: '/gallery'
@@ -184,11 +230,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/styles': {
       id: '/styles'
       path: '/styles'
       fullPath: '/styles'
       preLoaderRoute: typeof StylesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/testimonials': {
+      id: '/testimonials'
+      path: '/testimonials'
+      fullPath: '/testimonials'
+      preLoaderRoute: typeof TestimonialsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/timetable': {
@@ -220,8 +280,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ClassesRoute: ClassesRoute,
   EventsRoute: EventsRoute,
+  FaqRoute: FaqRoute,
   GalleryRoute: GalleryRoute,
+  PricingRoute: PricingRoute,
   StylesRoute: StylesRoute,
+  TestimonialsRoute: TestimonialsRoute,
   TimetableRoute: TimetableRoute,
   TrainersRoute: TrainersRoute,
   VideosRoute: VideosRoute,
