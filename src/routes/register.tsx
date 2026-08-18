@@ -161,7 +161,7 @@ function Field({
   label: string;
   name: string;
   type?: string;
-  error?: string;
+  error?: string | undefined;
   required?: boolean;
 }) {
   return (
@@ -185,7 +185,7 @@ function SelectField({
   label: string;
   name: string;
   options: string[];
-  error?: string;
+  error?: string | undefined;
 }) {
   return (
     <div>
