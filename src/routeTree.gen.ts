@@ -12,8 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ClassesRouteImport } from './routes/classes'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as StylesRouteImport } from './routes/styles'
+import { Route as TimetableRouteImport } from './routes/timetable'
 import { Route as TrainersRouteImport } from './routes/trainers'
+import { Route as VideosRouteImport } from './routes/videos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,9 +34,24 @@ const ClassesRoute = ClassesRouteImport.update({
   path: '/classes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StylesRoute = StylesRouteImport.update({
   id: '/styles',
   path: '/styles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimetableRoute = TimetableRouteImport.update({
+  id: '/timetable',
+  path: '/timetable',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrainersRoute = TrainersRouteImport.update({
@@ -40,43 +59,92 @@ const TrainersRoute = TrainersRouteImport.update({
   path: '/trainers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VideosRoute = VideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
+  '/events': typeof EventsRoute
+  '/gallery': typeof GalleryRoute
   '/styles': typeof StylesRoute
+  '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
+  '/events': typeof EventsRoute
+  '/gallery': typeof GalleryRoute
   '/styles': typeof StylesRoute
+  '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/classes': typeof ClassesRoute
+  '/events': typeof EventsRoute
+  '/gallery': typeof GalleryRoute
   '/styles': typeof StylesRoute
+  '/timetable': typeof TimetableRoute
   '/trainers': typeof TrainersRoute
+  '/videos': typeof VideosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/classes' | '/styles' | '/trainers'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/classes'
+    | '/events'
+    | '/gallery'
+    | '/styles'
+    | '/timetable'
+    | '/trainers'
+    | '/videos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/classes' | '/styles' | '/trainers'
-  id: '__root__' | '/' | '/about' | '/classes' | '/styles' | '/trainers'
+  to:
+    | '/'
+    | '/about'
+    | '/classes'
+    | '/events'
+    | '/gallery'
+    | '/styles'
+    | '/timetable'
+    | '/trainers'
+    | '/videos'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/classes'
+    | '/events'
+    | '/gallery'
+    | '/styles'
+    | '/timetable'
+    | '/trainers'
+    | '/videos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ClassesRoute: typeof ClassesRoute
+  EventsRoute: typeof EventsRoute
+  GalleryRoute: typeof GalleryRoute
   StylesRoute: typeof StylesRoute
+  TimetableRoute: typeof TimetableRoute
   TrainersRoute: typeof TrainersRoute
+  VideosRoute: typeof VideosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -102,11 +170,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/styles': {
       id: '/styles'
       path: '/styles'
       fullPath: '/styles'
       preLoaderRoute: typeof StylesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timetable': {
+      id: '/timetable'
+      path: '/timetable'
+      fullPath: '/timetable'
+      preLoaderRoute: typeof TimetableRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trainers': {
@@ -116,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrainersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/videos': {
+      id: '/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof VideosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -123,8 +219,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ClassesRoute: ClassesRoute,
+  EventsRoute: EventsRoute,
+  GalleryRoute: GalleryRoute,
   StylesRoute: StylesRoute,
+  TimetableRoute: TimetableRoute,
   TrainersRoute: TrainersRoute,
+  VideosRoute: VideosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
