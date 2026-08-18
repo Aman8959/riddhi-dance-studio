@@ -1,0 +1,30 @@
+import { MessageCircle } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+
+import { whatsappLink } from "@/config/site";
+
+export function WhatsAppButton() {
+  return (
+    <>
+      <a
+        href={whatsappLink()}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Chat with Riddhi Dance Studio on WhatsApp"
+        className="fixed bottom-20 right-4 z-40 grid size-14 place-items-center rounded-full bg-[image:var(--gradient-brand)] text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:scale-105 sm:bottom-6"
+      >
+        <MessageCircle className="size-6" />
+      </a>
+
+      {/* Sticky mobile CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 px-4 py-3 backdrop-blur sm:hidden">
+        <Link
+          to="/trial"
+          className="flex h-11 items-center justify-center rounded-full bg-[image:var(--gradient-brand)] text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground"
+        >
+          Book a Free Trial
+        </Link>
+      </div>
+    </>
+  );
+}
