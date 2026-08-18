@@ -1,566 +1,88 @@
-# Riddhi Studio Connect
+# Riddhi Dance Studio
 
-Riddhi Dance Studio — Professional Website Development Prompt
+A premium dance studio website built for class discovery, trial bookings, inquiries, and brand storytelling.
 
-Project Overview
+## Overview
 
-Create a modern, premium, responsive and highly engaging website for Riddhi Dance Studio, a professional dance academy/studio focused on providing quality dance training for children, teenagers and adults.
+Riddhi Dance Studio is a modern dance academy website designed to help students and parents explore classes, view trainer profiles, check the timetable, and book trial sessions with ease. The website is built to feel energetic, premium, and trustworthy while remaining fast and mobile-friendly.
 
-The website should feel energetic, elegant, trustworthy and professional while maintaining a strong connection with dance, creativity, fitness and Indian culture.
+## Key Features
 
-The final website should not look like a generic template. It should have a unique visual identity for Riddhi Dance Studio and provide an excellent experience on desktop, tablet and mobile devices.
+- Premium landing page with strong call-to-action sections
+- Class listings for kids, teens, and adults
+- Trainer profiles and studio credentials
+- Timetable and batch information
+- Gallery and media showcase
+- Testimonials and social proof
+- Trial booking and registration flow
+- Contact and WhatsApp inquiry support
+- Responsive layout for desktop, tablet, and mobile
 
-1. Brand Identity
+## Tech Stack
 
-Brand Name: Riddhi Dance Studio
+- React
+- TypeScript
+- Vite
+- TanStack Router
+- Tailwind CSS
+- Radix UI
 
-Brand Personality:
+## Project Structure
 
-Energetic
+```text
+src/
+  components/
+  config/
+  data/
+  hooks/
+  lib/
+  routes/
+public/
+```
 
-Creative
+## Getting Started
 
-Professional
+Install dependencies:
 
-Youthful
+```bash
+npm install
+```
 
-Elegant
+Run the app locally:
 
-Friendly
+```bash
+npm run dev
+```
 
-Passionate about dance
+Build for production:
 
-Use a visually attractive dance-inspired design with smooth animations and modern typography.
+```bash
+npm run build
+```
 
-Suggested Visual Style
+Preview the production build:
 
-Use a premium combination of:
+```bash
+npm run preview
+```
 
-Deep dark backgrounds
+## Available Scripts
 
-Vibrant accent colors
+```bash
+npm run dev        # local development server
+npm run build      # production build
+npm run preview    # preview production output
+npm run lint       # lint the project
+npm run format     # format code with Prettier
+```
 
-White/light typography
+## Brand Goal
 
-Dance photography
+The website is designed to position Riddhi Dance Studio as a professional, joyful, and results-driven dance academy that helps students build confidence, technique, and performance skills.
 
-Gradient elements
+## Notes
 
-Glassmorphism where appropriate
-
-Large typography
-
-Smooth transitions
-
-Subtle motion effects
-
-Avoid excessive animations. The website should remain fast, professional and easy to navigate.
-
-2. Website Structure
-
-Create the following main sections/pages:
-
-Home
-
-About Us
-
-Dance Classes
-
-Dance Styles
-
-Trainers / Instructors
-
-Batches & Timetable
-
-Gallery
-
-Videos
-
-Events & Workshops
-
-Testimonials
-
-Pricing / Membership
-
-Online Registration
-
-Contact Us
-
-FAQ
-
-Also provide a proper navigation bar with a prominent "Join Now" / "Book a Trial Class" CTA.
-
-3. Home Page
-
-Design a visually impressive landing page.
-
-Hero Section
-
-Include:
-
-Headline:
-"Move. Express. Inspire."
-
-or a similar powerful dance-focused headline.
-
-Add a short description explaining what Riddhi Dance Studio offers.
-
-Primary CTA:
-
-Join a Dance Class
-
-Secondary CTA:
-
-Book a Free Trial
-
-Use a high-quality dance background image/video with a dark overlay.
-
-Add subtle entrance animations.
-
-4. About Riddhi Dance Studio
-
-Create an attractive About section explaining:
-
-Studio introduction
-
-Vision
-
-Mission
-
-Dance philosophy
-
-Training approach
-
-Experience
-
-Achievements
-
-Why students choose Riddhi Dance Studio
-
-Add statistics such as:
-
-500+ Students Trained
-
-10+ Dance Styles
-
-5+ Professional Trainers
-
-50+ Performances
-
-100+ Workshops
-
-These numbers should be configurable rather than hard-coded permanently.
-
-5. Dance Classes
-
-Create a dedicated section displaying available classes.
-
-Each class card should contain:
-
-Class name
-
-Dance style
-
-Age group
-
-Difficulty level
-
-Class duration
-
-Batch timing
-
-Trainer
-
-Short description
-
-Price
-
-"Book Trial" button
-
-Example classes:
-
-Kids Dance
-
-Bollywood Dance
-
-Hip-Hop
-
-Contemporary
-
-Freestyle
-
-Classical Dance
-
-Wedding Choreography
-
-Fitness Dance
-
-Zumba
-
-Personal Dance Training
-
-The studio owner should be able to add/edit/remove classes later.
-
-6. Dance Styles
-
-Create a visually rich section for different dance styles.
-
-Each style should have:
-
-Image
-
-Name
-
-Description
-
-Skill level
-
-Suitable age group
-
-Learn More button
-
-Use attractive hover animations.
-
-7. Trainers / Instructors
-
-Create professional trainer profile cards.
-
-Each trainer should have:
-
-Profile photo
-
-Name
-
-Position
-
-Specialization
-
-Experience
-
-Achievements
-
-Short biography
-
-Social media links
-
-Example:
-
-Trainer Name
-Professional Dance Instructor
-Specialization: Bollywood, Hip-Hop & Contemporary
-Experience: 8+ Years
-
-8. Batch & Timetable System
-
-Create a professional timetable.
-
-Users should be able to filter batches by:
-
-Dance style
-
-Age group
-
-Day
-
-Time
-
-Trainer
-
-Beginner / Intermediate / Advanced
-
-Example:
-
-DayTimeClassAge GroupTrainerMonday5:00 PMKids Dance6–12TrainerTuesday6:30 PMHip-Hop13+TrainerWednesday7:00 PMContemporary15+Trainer
-
-Include a Book This Batch button.
-
-9. Online Registration
-
-Create a complete student registration form.
-
-Fields:
-
-Student Name
-
-Parent Name (if applicable)
-
-Date of Birth
-
-Age
-
-Gender
-
-Mobile Number
-
-Email
-
-Address
-
-Dance Style
-
-Preferred Batch
-
-Previous Dance Experience
-
-Preferred Start Date
-
-Message
-
-Add proper form validation.
-
-After submission:
-
-Show success message
-
-Store registration data
-
-Send notification to admin
-
-Optionally send confirmation to student
-
-10. Trial Class Booking
-
-Create a dedicated Book a Trial Class feature.
-
-Users should be able to select:
-
-Dance style
-
-Preferred date
-
-Preferred time
-
-Student name
-
-Phone number
-
-Email
-
-Show available slots dynamically.
-
-After booking, display a confirmation screen.
-
-11. Gallery
-
-Create a professional image gallery showcasing:
-
-Dance performances
-
-Studio
-
-Students
-
-Competitions
-
-Events
-
-Workshops
-
-Training sessions
-
-Performances
-
-Add:
-
-Category filters
-
-Lightbox preview
-
-Smooth transitions
-
-Lazy loading
-
-Categories:
-
-All | Classes | Events | Performances | Workshops | Competitions
-
-12. Video Section
-
-Create a video showcase section.
-
-Display:
-
-Dance performances
-
-Choreography videos
-
-Student performances
-
-Workshop videos
-
-Behind-the-scenes content
-
-Support YouTube/Instagram video links.
-
-Use video thumbnails instead of automatically loading multiple videos to maintain performance.
-
-13. Events & Workshops
-
-Create an Events section.
-
-Each event should include:
-
-Event image
-
-Event name
-
-Date
-
-Time
-
-Location
-
-Description
-
-Instructor
-
-Registration status
-
-Register Now button
-
-Example:
-
-Bollywood Dance Workshop
-
-Date: 25 August 2026
-Time: 5:00 PM
-Duration: 2 Hours
-
-14. Testimonials
-
-Create a modern testimonial carousel.
-
-Include:
-
-Student/Parent name
-
-Profile image
-
-Rating
-
-Review
-
-Dance class attended
-
-Example:
-
-★★★★★
-
-"Riddhi Dance Studio has completely transformed my confidence and dancing skills. The trainers are extremely supportive."
-
-15. Pricing / Membership
-
-Create attractive pricing cards.
-
-Possible plans:
-
-Basic
-
-8 Classes / Month
-
-1 Dance Style
-
-Beginner Level
-
-Standard
-
-12 Classes / Month
-
-Multiple Dance Styles
-
-Performance Opportunities
-
-Premium
-
-Unlimited Classes
-
-Personal Guidance
-
-Workshop Access
-
-Priority Registration
-
-Add a Join Now button.
-
-Prices must be editable from the admin panel.
-
-16. Special Services
-
-Create a separate section for additional services:
-
-Wedding Choreography
-
-Customized choreography for weddings and special occasions.
-
-Corporate Events
-
-Dance performances and workshops for corporate events.
-
-School & College Workshops
-
-Dance workshops and training programs.
-
-Personal Training
-
-One-on-one dance training.
-
-Event Performances
-
-Professional dance performances for events.
-
-17. Contact Page
-
-Create a professional contact section containing:
-
-Studio address
-
-Google Maps integration
-
-Phone number
-
-WhatsApp button
-
-Email
-
-Instagram
-
-Facebook
-
-YouTube
-
-Business hours
-
-Add a contact form:
-
-Name
-Phone
-Email
-Subject
-Message
-
-Add:
-
-Call Now
-
-WhatsApp Us
-
-Get Directions
-
-buttons.
-
-18. WhatsApp Integration
-
-Add a floating WhatsApp button throughout the website.
-
-When clicked, open WhatsApp with a pre-filled message such as:
-
-"Hello Riddhi Dance Studio, I would like to know more about your dance classes."
-
-The phone number should be configurable from the admin panel.
-
-19. Admin Dashboard
-
-Create a secure admin dashboard for studio management.
+This project is structured for future maintenance and easy content updates, making it suitable for real studio operations and marketing growth.
 
 Admin should be able to manage:
 
@@ -1214,16 +736,6 @@ What Riddhi Dance Studio offers → Why they should choose it → Which class is
 Before implementation, create the complete information architecture, component structure, database schema and API structure. Then implement the frontend and backend systematically.
 
 Use reusable components and clean code architecture throughout the project.
-
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/bd4872bc-37d6-45e2-8537-13680579d015).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
