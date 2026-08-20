@@ -117,12 +117,13 @@ function saveMediaFile(input, title) {
 	if (bytes.length > MAX_MEDIA_BYTES) throw new Error("Media files must be 8 MB or smaller");
 	const file = getMediaFolder().createFile(Utilities.newBlob(bytes, input.mimeType, input.name)).setName(title + " - " + input.name);
 	file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-	return { id: file.getId(), url: "https://drive.google.com/uc?export=view&id=" + file.getId() };
+	return { id: file.getId(), url: "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1600" };
 }
 
 function publicMedia(media) {
-	const thumbnailUrl = media.thumbnailUrl || (media.kind === "video" && media.youtubeId ? "https://i.ytimg.com/vi/" + media.youtubeId + "/hqdefault.jpg" : "");
-	return { id: media.id, kind: media.kind, title: media.title, category: media.category, url: media.url, thumbnailUrl: thumbnailUrl, youtubeId: media.youtubeId, createdAt: media.createdAt };
+	const fileUrl = media.driveId ? "https://drive.google.com/thumbnail?id=" + media.driveId + "&sz=w1600" : media.url;
+	const thumbnailUrl = media.thumbnailDriveId ? "https://drive.google.com/thumbnail?id=" + media.thumbnailDriveId + "&sz=w1600" : (media.thumbnailUrl || (media.kind === "video" && media.youtubeId ? "https://i.ytimg.com/vi/" + media.youtubeId + "/hqdefault.jpg" : ""));
+	return { id: media.id, kind: media.kind, title: media.title, category: media.category, url: fileUrl, thumbnailUrl: thumbnailUrl, youtubeId: media.youtubeId, createdAt: media.createdAt };
 }
 
 function normalizeYoutubeId(value) {
