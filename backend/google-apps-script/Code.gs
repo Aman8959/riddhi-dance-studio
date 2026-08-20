@@ -84,8 +84,9 @@ function addMedia(body) {
 	if (!body.title || !body.category) throw new Error("Title and category are required");
 	const media = { id: Utilities.getUuid(), kind: body.kind, title: String(body.title).trim(), category: String(body.category).trim(), url: "", thumbnailUrl: "", youtubeId: body.youtubeId ? normalizeYoutubeId(body.youtubeId) : "", createdAt: new Date().toISOString(), driveId: "", thumbnailDriveId: "" };
 	if (body.kind === "video") {
-		if (!media.youtubeId) throw new Error("YouTube video ID is required");
-		media.url = "https://www.youtube.com/watch?v=" + media.youtubeId;
+		if (!media.youtubeId && !body.file) throw new Error("YouTube link or video file is required");
+		if (media.youtubeId) media.url = "https://www.youtube.com/watch?v=" + media.youtubeId;
+		if (body.file) { const file = saveMediaFile(body.file, media.title); media.driveId = file.id; media.url = file.url; }
 		if (body.thumbnail) { const thumbnail = saveMediaFile(body.thumbnail, media.title + " thumbnail"); media.thumbnailDriveId = thumbnail.id; media.thumbnailUrl = thumbnail.url; }
 	} else {
 		if (!body.file) throw new Error("An image or poster file is required");

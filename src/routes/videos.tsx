@@ -47,7 +47,7 @@ function VideosPage() {
             <Reveal key={v.id} delay={i * 60}>
               <article className="glass-panel overflow-hidden rounded-2xl">
                 <div className="relative aspect-video bg-muted">
-                  {playing === v.id ? (
+                  {playing === v.id && v.youtubeId ? (
                     <iframe
                       src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
                       title={v.title}
@@ -56,6 +56,8 @@ function VideosPage() {
                       loading="lazy"
                       className="size-full"
                     />
+                  ) : playing === v.id ? (
+                    <video src={v.url} controls autoPlay className="size-full" />
                   ) : (
                     <button
                       type="button"
