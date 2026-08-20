@@ -224,7 +224,7 @@ export type Trainer = {
 export const trainers: Trainer[] = [
   
   {
-    id: "riddhi-Shukla",
+    id: "riddhi-shukla",
     name: "Riddhi Shukla",
     position: "Founder & Senior Trainer",
     specialization: "Bollywood,Fitness Zumba Wedding ,Hip_Hop,Choreography & Kids Training",
