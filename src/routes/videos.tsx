@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Play } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { videos } from "@/data/studio";
+import { getMedia, type MediaItem } from "@/lib/submissions";
 
 export const Route = createFileRoute("/videos")({
   head: () => ({
@@ -27,6 +28,10 @@ export const Route = createFileRoute("/videos")({
 
 function VideosPage() {
   const [playing, setPlaying] = useState<string | null>(null);
+  const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
+  useEffect(() => { void getMedia().then(setRemoteMedia).catch(() => undefined); }, []);
+  const publishedVideos = remoteMedia.filter((item) => item.kind === "video" && item.youtubeId).map((item) => ({ id: item.id, title: item.title, category: item.category, youtubeId: item.youtubeId, thumbnail: item.thumbnailUrl }));
+  const allVideos = [...publishedVideos, ...videos];
 
   return (
     <>
@@ -38,7 +43,7 @@ function VideosPage() {
 
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {videos.map((v, i) => (
+          {allVideos.map((v, i) => (
             <Reveal key={v.id} delay={i * 60}>
               <article className="glass-panel overflow-hidden rounded-2xl">
                 <div className="relative aspect-video bg-muted">
@@ -62,6 +67,7 @@ function VideosPage() {
                         src={v.thumbnail}
                         alt={v.title}
                         loading="lazy"
+                        decoding="async"
                         width={1024}
                         height={768}
                         className="size-full object-cover"

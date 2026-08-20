@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { Button } from "@/components/ui/button";
 import { galleryCategories, galleryItems, type GalleryItem } from "@/data/studio";
+import { getMedia, type MediaItem } from "@/lib/submissions";
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -29,10 +30,17 @@ export const Route = createFileRoute("/gallery")({
 function GalleryPage() {
   const [category, setCategory] = useState<(typeof galleryCategories)[number]>("All");
   const [active, setActive] = useState<GalleryItem | null>(null);
+  const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
+
+  useEffect(() => { void getMedia().then(setRemoteMedia).catch(() => undefined); }, []);
+
+  const publishedItems: GalleryItem[] = remoteMedia
+    .filter((item) => item.kind === "image" || item.kind === "poster")
+    .map((item) => ({ id: item.id, image: item.url, title: item.title, category: "Events" }));
 
   const items = useMemo(
-    () => (category === "All" ? galleryItems : galleryItems.filter((i) => i.category === category)),
-    [category],
+    () => { const allItems = [...publishedItems, ...galleryItems]; return category === "All" ? allItems : allItems.filter((i) => i.category === category); },
+    [category, remoteMedia],
   );
 
   return (
@@ -71,6 +79,7 @@ function GalleryPage() {
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
+                  decoding="async"
                   width={1024}
                   height={768}
                   className="h-64 w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -105,6 +114,8 @@ function GalleryPage() {
             <img
               src={active.image}
               alt={active.title}
+              loading="lazy"
+              decoding="async"
               width={1024}
               height={768}
               className="max-h-[75vh] w-full rounded-2xl object-contain"
