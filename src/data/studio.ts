@@ -222,24 +222,23 @@ export type Trainer = {
 };
 
 export const trainers: Trainer[] = [
-  
   {
     id: "riddhi-shukla",
     name: "Riddhi Shukla",
     position: "Founder & Senior Trainer",
-    specialization: "Bollywood,Fitness Zumba Wedding ,Hip_Hop,Choreography & Kids Training",
+    specialization: "Bollywood, Fitness Zumba, Wedding Choreography, Hip-Hop, & Kids Training",
     experience: "4+ Years",
     achievements: [
       "Trained by Kings United India",
-    "Trained 200+ students",
-    "20+ years of fitness coaching experience",
-    "Social motivation for fitness and wellness",
-    "Successfully organized and conducted Garba events"
+      "Trained 200+ students",
+      "20+ years of fitness coaching experience", 
+      "Social motivation for fitness and wellness",
+      "Successfully organized and conducted Garba events"
     ],
     bio: "Riddhi Shukla is the Founder & Senior Instructor, passionate about dance, fitness, and wellness. With expertise in Hip-Hop, Bollywood, Semi-Classical, and Zumba, she brings together energetic movement, creative choreography, and fitness-focused training to create an engaging learning experience. She has trained 200+ students and continues to inspire people to embrace an active and healthy lifestyle. Her experience in conducting successful Garba events and promoting fitness and wellness reflects her dedication to building a vibrant and positive community through dance.",
     image: trainer2,
-    instagram: "https://www.instagram.com/rds_dance_studio_satna?igsh=czQ3ZzQ1cmN1azJj&igsi=czQ3ZzQ1cmN1azJj",
-    youtube: "https://youtube.com/@riddhishukla9706?si=rlOftPpMqzwwKEl-",
+    instagram: "https://www.instagram.com/rds_dance_studio_satna/",
+    youtube: "https://www.youtube.com/@riddhishukla9706",
   },
 ];
 
