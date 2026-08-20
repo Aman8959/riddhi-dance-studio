@@ -160,4 +160,12 @@ function getMediaFolder() {
 	return folderId ? DriveApp.getFolderById(folderId.trim()) : DriveApp.getRootFolder();
 }
 
+// Run this once from the Apps Script editor to grant Spreadsheet and Drive access.
+function authorizeServices() {
+	const sheetId = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+	if (!sheetId) throw new Error("SHEET_ID is not configured");
+	SpreadsheetApp.openById(sheetId.trim()).getName();
+	getMediaFolder().getName();
+}
+
 function json(value, status) { return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON); }
