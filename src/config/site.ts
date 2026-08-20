@@ -7,15 +7,15 @@ export const siteConfig = {
   tagline: "Move. Express. Inspire.",
   shortDescription:
     "A professional dance academy training kids, teens and adults across Bollywood, Hip-Hop, Contemporary, Classical and dance fitness.",
-  phone: "+91 98765 43210",
-  whatsapp: "919876543210",
+  phone: "+91 7024626760",
+  whatsapp: "7024626760",
   whatsappMessage:
     "Hello Riddhi Dance Studio, I would like to know more about your dance classes.",
-  email: "hello@riddhidancestudio.com",
+  email: "riddhshukla9706@gmail.com",
   address: {
-    line1: "2nd Floor, Rhythm Plaza, FC Road",
-    line2: "Shivajinagar, Pune, Maharashtra 411005",
-    mapsQuery: "Rhythm Plaza FC Road Shivajinagar Pune",
+    line1: "Ashok Vihar Colony Rajiv park ",
+    line2: "Satna Madhya Pradesh 485001 ",
+    mapsQuery: "Riddhi Dance Studio Satna ",
   },
   hours: [
     { days: "Monday – Friday", time: "9:00 AM – 9:00 PM" },
@@ -23,16 +23,16 @@ export const siteConfig = {
     { days: "Sunday", time: "9:00 AM – 2:00 PM (workshops only)" },
   ],
   social: {
-    instagram: "https://instagram.com/riddhidancestudio",
-    facebook: "https://facebook.com/riddhidancestudio",
-    youtube: "https://youtube.com/@riddhidancestudio",
+    instagram: "https://www.instagram.com/rds_dance_studio_satna?igsh=czQ3ZzQ1cmN1azJj&igsi=czQ3ZzQ1cmN1azJj",
+    facebook: "https://www.facebook.com/Rdsdancestudiosatna",
+    youtube: "https://youtube.com/@riddhishukla9706?si=rlOftPpMqzwwKEl-",
   },
   stats: [
-    { value: 500, suffix: "+", label: "Students Trained" },
+    { value: 200, suffix: "+", label: "Students Trained" },
     { value: 10, suffix: "+", label: "Dance Styles" },
-    { value: 5, suffix: "+", label: "Professional Trainers" },
+    { value: 2, suffix: "+", label: "Professional Trainers" },
     { value: 50, suffix: "+", label: "Stage Performances" },
-    { value: 100, suffix: "+", label: "Workshops Hosted" },
+    { value: 50, suffix: "+", label: "Workshops Hosted" },
   ],
 } as const;
 

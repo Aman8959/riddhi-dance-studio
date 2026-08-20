@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, ShieldCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -80,6 +80,11 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
+            <Button asChild variant="glass" size="xl" className="hidden lg:inline-flex">
+              <Link to="/admin">
+                <ShieldCheck className="size-4" /> Admin Login
+              </Link>
+            </Button>
             <Button asChild variant="hero" size="xl" className="hidden sm:inline-flex">
               <Link to="/trial">Book a Trial</Link>
             </Button>
@@ -114,6 +119,11 @@ export function Navbar() {
             ))}
           </ul>
           <div className="mt-6 grid gap-3">
+            <Button asChild variant="glass" size="xl">
+              <Link to="/admin" onClick={() => setOpen(false)}>
+                <ShieldCheck className="size-4" /> Admin Login
+              </Link>
+            </Button>
             <Button asChild variant="hero" size="xl">
               <Link to="/trial" onClick={() => setOpen(false)}>
                 Book a Free Trial

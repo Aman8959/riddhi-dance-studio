@@ -8,9 +8,8 @@ import studio from "@/assets/gallery-studio.jpg";
 import competition from "@/assets/gallery-competition.jpg";
 import wedding from "@/assets/gallery-wedding.jpg";
 import workshop from "@/assets/gallery-workshop.jpg";
-import trainer1 from "@/assets/trainer-1.jpg";
-import trainer2 from "@/assets/trainer-2.jpg";
-import trainer3 from "@/assets/trainer-3.jpg";
+import trainer2 from "@/assets/trainer-2.jpeg";
+
 
 export type Level = "Beginner" | "Intermediate" | "Advanced" | "All Levels";
 
@@ -103,24 +102,24 @@ export const danceClasses: DanceClass[] = [
     level: "Beginner",
     duration: "60 min",
     timing: "Mon & Wed, 5:00 PM",
-    trainer: "Riddhi Patel",
+    trainer: "Ajeet Sir",
     description:
       "Rhythm games, basic technique and mini stage routines that make shy kids shine.",
-    price: 1800,
+    price: 700,
     image: kids,
   },
   {
     id: "bollywood",
     name: "Bollywood Batch",
     style: "Bollywood",
-    ageGroup: "13+ years",
+    ageGroup: "10+ years",
     level: "All Levels",
     duration: "75 min",
     timing: "Tue & Thu, 7:00 PM",
-    trainer: "Riddhi Patel",
+    trainer: "Ajeet Sir",
     description:
       "Trending song choreography with expressions, formations and performance polish.",
-    price: 2200,
+    price: 1000,
     image: bollywood,
   },
   {
@@ -131,10 +130,10 @@ export const danceClasses: DanceClass[] = [
     level: "Beginner",
     duration: "75 min",
     timing: "Tue & Fri, 6:30 PM",
-    trainer: "Aarav Sharma",
+    trainer: "Riddhi & Ajeet Sir",
     description:
       "Groove foundations, drills and battle-ready freestyle sessions every week.",
-    price: 2400,
+    price: 1000,
     image: hiphop,
   },
   {
@@ -153,13 +152,13 @@ export const danceClasses: DanceClass[] = [
   },
   {
     id: "classical",
-    name: "Bharatanatyam Gurukul",
+    name: "Semi Classical",
     style: "Classical",
     ageGroup: "6+ years",
     level: "All Levels",
     duration: "90 min",
     timing: "Sat, 9:00 AM",
-    trainer: "Meera Iyer",
+    trainer: "Riddhi Shukla",
     description:
       "Graded classical syllabus with adavus, theory and annual arangetram preparation.",
     price: 2500,
@@ -173,7 +172,7 @@ export const danceClasses: DanceClass[] = [
     level: "All Levels",
     duration: "45 min",
     timing: "Mon–Fri, 7:00 AM",
-    trainer: "Meera Iyer",
+    trainer: "Riddhi Shukla",
     description:
       "Morning cardio dance that torches calories with Latin and Bollywood beats.",
     price: 1500,
@@ -223,53 +222,24 @@ export type Trainer = {
 };
 
 export const trainers: Trainer[] = [
+  
   {
-    id: "aarav-sharma",
-    name: "Aarav Sharma",
-    position: "Senior Dance Instructor",
-    specialization: "Hip-Hop, Contemporary & Freestyle",
-    experience: "8+ Years",
+    id: "riddhi-Shukla",
+    name: "Riddhi Shukla",
+    position: "Founder & Senior Trainer",
+    specialization: "Bollywood,Fitness Zumba Wedding ,Hip_Hop,Choreography & Kids Training",
+    experience: "4+ Years",
     achievements: [
-      "National Hip-Hop Championship finalist",
-      "Choreographed 30+ stage productions",
-      "Trained 200+ students",
+      "Trained by Kings United India",
+    "Trained 200+ students",
+    "20+ years of fitness coaching experience",
+    "Social motivation for fitness and wellness",
+    "Successfully organized and conducted Garba events"
     ],
-    bio: "Aarav blends street dance foundations with contemporary technique, and is known for turning absolute beginners into confident performers within a season.",
-    image: trainer1,
-    instagram: "https://instagram.com/riddhidancestudio",
-    youtube: "https://youtube.com/@riddhidancestudio",
-  },
-  {
-    id: "riddhi-patel",
-    name: "Riddhi Patel",
-    position: "Founder & Artistic Director",
-    specialization: "Bollywood, Wedding Choreography & Kids Training",
-    experience: "12+ Years",
-    achievements: [
-      "Founder of Riddhi Dance Studio",
-      "150+ wedding choreographies delivered",
-      "Judge at inter-school dance festivals",
-    ],
-    bio: "Riddhi built the studio around one belief: technique matters, but confidence transforms. She leads the Bollywood and kids programmes personally.",
+    bio: "Riddhi Shukla is the Founder & Senior Instructor, passionate about dance, fitness, and wellness. With expertise in Hip-Hop, Bollywood, Semi-Classical, and Zumba, she brings together energetic movement, creative choreography, and fitness-focused training to create an engaging learning experience. She has trained 200+ students and continues to inspire people to embrace an active and healthy lifestyle. Her experience in conducting successful Garba events and promoting fitness and wellness reflects her dedication to building a vibrant and positive community through dance.",
     image: trainer2,
-    instagram: "https://instagram.com/riddhidancestudio",
-    youtube: "https://youtube.com/@riddhidancestudio",
-  },
-  {
-    id: "meera-iyer",
-    name: "Meera Iyer",
-    position: "Classical & Fitness Faculty",
-    specialization: "Bharatanatyam & Dance Fitness",
-    experience: "15+ Years",
-    achievements: [
-      "Bharatanatyam Visharad",
-      "Guided 20+ arangetram debuts",
-      "Certified Zumba instructor",
-    ],
-    bio: "Meera carries a classical lineage of three decades and keeps the syllabus rigorous while making every class approachable for new learners.",
-    image: trainer3,
-    instagram: "https://instagram.com/riddhidancestudio",
-    youtube: "https://youtube.com/@riddhidancestudio",
+    instagram: "https://www.instagram.com/rds_dance_studio_satna?igsh=czQ3ZzQ1cmN1azJj&igsi=czQ3ZzQ1cmN1azJj",
+    youtube: "https://youtube.com/@riddhishukla9706?si=rlOftPpMqzwwKEl-",
   },
 ];
 
@@ -355,8 +325,8 @@ export const events: StudioEvent[] = [
     date: "25 August 2026",
     time: "5:00 PM",
     duration: "2 Hours",
-    location: "Riddhi Studio, FC Road",
-    instructor: "Riddhi Patel",
+    location: "RDS Dance Studio,",
+    instructor: "Riddhi Shukla",
     description:
       "Learn a full trending Bollywood routine in one high-energy session — open to all levels.",
     image: bollywood,
@@ -364,12 +334,12 @@ export const events: StudioEvent[] = [
   },
   {
     id: "e2",
-    name: "Hip-Hop Intensive with Guest Crew",
+    name: "Hip-Hop Intensive",
     date: "7 September 2026",
     time: "4:00 PM",
     duration: "3 Hours",
-    location: "Riddhi Studio, FC Road",
-    instructor: "Aarav Sharma",
+    location: "RDS Dance Studio,Ashok vihar Colony Rajiv Park Satna MP ",
+    instructor: "Riddhi Shukla",
     description:
       "Grooves, foundations and a freestyle cypher hosted with a visiting Mumbai crew.",
     image: hiphop,
@@ -377,12 +347,12 @@ export const events: StudioEvent[] = [
   },
   {
     id: "e3",
-    name: "Navratri Garba Bootcamp",
+    name: "Navratri Garba Raas",
     date: "20 September 2026",
-    time: "6:30 PM",
+    time: "6:00 PM",
     duration: "90 Minutes",
-    location: "Rhythm Hall, Shivajinagar",
-    instructor: "Meera Iyer",
+    location: "KJS Park Bandhavghar Colony",
+    instructor: "Riddhi Shukla",
     description:
       "Get festival-ready with traditional and fusion garba steps for the whole family.",
     image: classical,
@@ -394,12 +364,12 @@ export const events: StudioEvent[] = [
     date: "12 December 2026",
     time: "6:00 PM",
     duration: "3 Hours",
-    location: "Bal Gandharva Auditorium",
+    location: "RDS Dance Studio",
     instructor: "All Faculty",
     description:
       "Our yearly stage production featuring every batch, from kids to advanced crews.",
     image: competition,
-    status: "Full",
+    status: "Open",
   },
 ];
 
