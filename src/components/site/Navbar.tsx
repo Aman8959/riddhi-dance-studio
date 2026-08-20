@@ -75,7 +75,7 @@ export function Navbar() {
                   activeOptions={{ exact: link.to === "/" }}
                   activeProps={{ className: "text-gold" }}
                   inactiveProps={{ className: "text-muted-foreground" }}
-                  className="rounded-full px-2 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.07em] transition-colors hover:text-foreground 2xl:px-3 2xl:text-xs 2xl:tracking-[0.14em]"
+                  className="rounded-full px-2.5 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-foreground 2xl:px-3 2xl:text-xs 2xl:tracking-[0.14em]"
                 >
                   {link.label}
                 </Link>
@@ -84,12 +84,12 @@ export function Navbar() {
           </ul>
 
           <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
-            <Button asChild variant="glass" size="sm" className="hidden lg:inline-flex lg:px-2.5 2xl:px-3">
+            <Button asChild variant="glass" size="sm" className="hidden lg:inline-flex lg:h-10 lg:px-3 lg:text-xs 2xl:px-4">
               <Link to="/admin">
                 <ShieldCheck className="size-4" /> Admin Login
               </Link>
             </Button>
-            <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex lg:px-3 2xl:px-4">
+            <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex lg:h-10 lg:px-3.5 lg:text-xs 2xl:px-4">
               <Link to="/trial">Book a Trial</Link>
             </Button>
             <button
