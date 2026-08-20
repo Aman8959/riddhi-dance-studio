@@ -86,17 +86,17 @@ function HomePage() {
         <div className="absolute inset-0 -z-10 bg-stage" />
 
         <div className="mx-auto w-full max-w-7xl px-4 pt-28 pb-20 sm:px-6 lg:px-8">
-          <Badge className="animate-rise bg-gold text-gold-foreground">
+          <Badge className="bg-gold text-gold-foreground">
             Now enrolling · Free trial class
           </Badge>
-          <h1 className="animate-rise mt-6 max-w-3xl text-6xl uppercase leading-[0.88] tracking-wide sm:text-7xl lg:text-8xl">
+          <h1 className="mt-6 max-w-3xl text-6xl uppercase leading-[0.88] tracking-wide sm:text-7xl lg:text-8xl">
             Move. <span className="text-gradient-brand">Express.</span> Inspire.
           </h1>
-          <p className="animate-rise mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {siteConfig.shortDescription} Train with working performers, learn a real syllabus and
             perform on a real stage.
           </p>
-          <div className="animate-rise mt-9 flex flex-wrap gap-3">
+          <div className="mt-9 flex flex-wrap gap-3">
             <Button asChild variant="hero" size="xl">
               <Link to="/classes">
                 Join a Dance Class <ArrowRight />
@@ -106,7 +106,7 @@ function HomePage() {
               <Link to="/trial">Book a Free Trial</Link>
             </Button>
           </div>
-          <div className="animate-rise mt-10 flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground">
             <span className="flex text-gold">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="size-4 fill-current" />
