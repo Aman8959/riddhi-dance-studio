@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { mapsEmbed, mapsLink, siteConfig, whatsappLink } from "@/config/site";
+import { submitSubmission } from "@/lib/submissions";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -66,8 +67,9 @@ const schema = z.object({
 
 function ContactPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const parsed = schema.safeParse(Object.fromEntries(new FormData(form).entries()));
@@ -79,8 +81,16 @@ function ContactPage() {
       return;
     }
     setErrors({});
-    toast.success("Message sent! We usually reply the same day.");
-    form.reset();
+    setSubmitting(true);
+    try {
+      await submitSubmission({ type: "contact", data: parsed.data });
+      toast.success("Message sent! We usually reply the same day.");
+      form.reset();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not send your message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -171,8 +181,8 @@ function ContactPage() {
               <p className="mt-1 text-xs text-destructive">{errors["message"]}</p>
             ) : null}
           </div>
-          <Button type="submit" variant="hero" size="xl" className="w-full">
-            Send Message
+          <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
+            {submitting ? "Sending..." : "Send Message"}
           </Button>
         </form>
       </section>

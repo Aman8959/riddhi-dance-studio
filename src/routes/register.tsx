@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { danceClasses, danceStyles } from "@/data/studio";
 import { whatsappLink } from "@/config/site";
+import { submitSubmission } from "@/lib/submissions";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -49,8 +50,9 @@ const schema = z.object({
 function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const raw = Object.fromEntries(new FormData(e.currentTarget).entries());
     const parsed = schema.safeParse(raw);
@@ -62,9 +64,21 @@ function RegisterPage() {
       return;
     }
     setErrors({});
-    setDone(parsed.data.studentName);
-    toast.success("Registration received — we will confirm your batch shortly.");
-    e.currentTarget.reset();
+    setSubmitting(true);
+    try {
+      const cleanData: Record<string, string | number> = {};
+      for (const [key, value] of Object.entries(parsed.data)) {
+        if (value !== undefined && value !== "") cleanData[key] = value;
+      }
+      await submitSubmission({ type: "registration", data: cleanData });
+      setDone(parsed.data.studentName);
+      toast.success("Registration received — we will confirm your batch shortly.");
+      e.currentTarget.reset();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not submit your registration. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -141,8 +155,8 @@ function RegisterPage() {
               <Label htmlFor="message">Message</Label>
               <Textarea id="message" name="message" rows={3} maxLength={600} className="mt-2" />
             </div>
-            <Button type="submit" variant="hero" size="xl" className="w-full">
-              Submit Registration
+            <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
+              {submitting ? "Submitting..." : "Submit Registration"}
             </Button>
           </form>
         )}

@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { danceStyles } from "@/data/studio";
-import { whatsappLink } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { submitSubmission } from "@/lib/submissions";
 
 export const Route = createFileRoute("/trial")({
   head: () => ({
@@ -46,8 +46,9 @@ function TrialPage() {
   const [time, setTime] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [confirmed, setConfirmed] = useState<z.infer<typeof schema> | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const raw = { ...Object.fromEntries(new FormData(e.currentTarget).entries()), style, time };
     const parsed = schema.safeParse(raw);
@@ -59,8 +60,16 @@ function TrialPage() {
       return;
     }
     setErrors({});
-    setConfirmed(parsed.data);
-    toast.success("Trial slot requested!");
+    setSubmitting(true);
+    try {
+      await submitSubmission({ type: "trial", data: parsed.data });
+      setConfirmed(parsed.data);
+      toast.success("Trial slot requested!");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not submit your trial request. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (confirmed) {
@@ -81,18 +90,7 @@ function TrialPage() {
               <Row label="Phone" value={confirmed.phone} />
               <Row label="Email" value={confirmed.email} />
             </dl>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild variant="hero" size="xl">
-                <a
-                  href={whatsappLink(
-                    `Hello Riddhi Dance Studio, I booked a free trial for ${confirmed.style} on ${confirmed.date} at ${confirmed.time}.`,
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Confirm on WhatsApp
-                </a>
-              </Button>
+            <div className="mt-8">
               <Button variant="glass" size="xl" onClick={() => setConfirmed(null)}>
                 Book Another Trial
               </Button>
@@ -189,8 +187,8 @@ function TrialPage() {
             {errors["time"] ? <p className="mt-2 text-xs text-destructive">{errors["time"]}</p> : null}
           </div>
 
-          <Button type="submit" variant="hero" size="xl" className="w-full">
-            Book My Free Trial
+          <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
+            {submitting ? "Submitting..." : "Book My Free Trial"}
           </Button>
         </form>
       </section>
