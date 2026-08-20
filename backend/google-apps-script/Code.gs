@@ -52,7 +52,9 @@ function submit(body) {
 
 function login(body) {
 	const properties = PropertiesService.getScriptProperties();
-	if (body.email !== properties.getProperty("ADMIN_EMAIL") || body.password !== properties.getProperty("ADMIN_PASSWORD")) throw new Error("Invalid admin credentials");
+	const email = String(body.email || "").trim();
+	const configuredEmail = String(properties.getProperty("ADMIN_EMAIL") || "").trim();
+	if (email !== configuredEmail || body.password !== properties.getProperty("ADMIN_PASSWORD")) throw new Error("Invalid admin credentials");
 	const token = Utilities.getUuid();
 	CacheService.getScriptCache().put("admin:" + token, "1", 21600);
 	return { ok: true, data: { token: token } };

@@ -32,7 +32,7 @@ function AdminPage() {
 
   async function login(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); setLoading(true);
-    try { const result = await adminLogin(email, password); window.localStorage.setItem(tokenKey, result.token); setToken(result.token); setPassword(""); await load(result.token); }
+    try { const result = await adminLogin(email.trim(), password); window.localStorage.setItem(tokenKey, result.token); setToken(result.token); setPassword(""); await load(result.token); }
     catch (error) { toast.error(error instanceof Error ? error.message : "Login failed."); }
     finally { setLoading(false); }
   }
