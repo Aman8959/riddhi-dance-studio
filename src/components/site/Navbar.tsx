@@ -51,7 +51,11 @@ export function Navbar() {
           aria-label="Main navigation"
           className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-8"
         >
-          <Link to="/" className="group flex items-center gap-3" onClick={() => setOpen(false)}>
+          <Link
+            to="/"
+            className="group flex shrink-0 items-center gap-2 lg:gap-3"
+            onClick={() => setOpen(false)}
+          >
             <span className="grid size-10 place-items-center rounded-full bg-[image:var(--gradient-brand)] font-display text-xl text-primary-foreground">
               R
             </span>
@@ -63,7 +67,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <ul className="hidden items-center gap-1 xl:flex">
+          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0 xl:flex 2xl:gap-1">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
@@ -71,7 +75,7 @@ export function Navbar() {
                   activeOptions={{ exact: link.to === "/" }}
                   activeProps={{ className: "text-gold" }}
                   inactiveProps={{ className: "text-muted-foreground" }}
-                  className="rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] transition-colors hover:text-foreground"
+                  className="rounded-full px-2 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.07em] transition-colors hover:text-foreground 2xl:px-3 2xl:text-xs 2xl:tracking-[0.14em]"
                 >
                   {link.label}
                 </Link>
@@ -79,13 +83,13 @@ export function Navbar() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-2">
-            <Button asChild variant="glass" size="xl" className="hidden lg:inline-flex">
+          <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
+            <Button asChild variant="glass" size="sm" className="hidden lg:inline-flex lg:px-2.5 2xl:px-3">
               <Link to="/admin">
                 <ShieldCheck className="size-4" /> Admin Login
               </Link>
             </Button>
-            <Button asChild variant="hero" size="xl" className="hidden sm:inline-flex">
+            <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex lg:px-3 2xl:px-4">
               <Link to="/trial">Book a Trial</Link>
             </Button>
             <button
