@@ -1,6 +1,6 @@
 /**
  * Deploy as a web app (execute as you, accessible to anyone). Configure these Script Properties:
- * SHEET_ID, ADMIN_EMAIL, ADMIN_PASSWORD
+ * SHEET_ID, MEDIA_FOLDER_ID, ADMIN_EMAIL, ADMIN_PASSWORD
  */
 const HEADERS = ["id", "type", "status", "createdAt", "data"];
 const MEDIA_HEADERS = [
@@ -157,7 +157,8 @@ function getMediaSheet() {
 
 function getMediaFolder() {
 	const folderId = PropertiesService.getScriptProperties().getProperty("MEDIA_FOLDER_ID");
-	return folderId ? DriveApp.getFolderById(folderId.trim()) : DriveApp.getRootFolder();
+	if (!folderId || !folderId.trim()) throw new Error("MEDIA_FOLDER_ID is not configured");
+	try { return DriveApp.getFolderById(folderId.trim()); } catch (error) { throw new Error("Invalid MEDIA_FOLDER_ID. Use the ID from the media folder URL."); }
 }
 
 // Run this once from the Apps Script editor to grant Spreadsheet and Drive access.
