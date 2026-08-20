@@ -13,6 +13,8 @@ export function ClassCard({ item }: { item: DanceClass }) {
           src={item.image}
           alt={`${item.name} at Riddhi Dance Studio`}
           loading="lazy"
+          decoding="async"
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           width={1024}
           height={768}
           className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -64,6 +66,8 @@ export function StyleCard({ item }: { item: DanceStyle }) {
         src={item.image}
         alt={`${item.name} dance classes`}
         loading="lazy"
+        decoding="async"
+        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
         width={1024}
         height={768}
         className="h-72 w-full object-cover transition-transform duration-[900ms] group-hover:scale-110 sm:h-80"
@@ -96,6 +100,8 @@ export function TrainerCard({ item }: { item: Trainer }) {
           src={item.image}
           alt={`${item.name}, ${item.position}`}
           loading="lazy"
+          decoding="async"
+          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
           width={800}
           height={1000}
           className="size-full object-cover transition-transform duration-700 hover:scale-105"

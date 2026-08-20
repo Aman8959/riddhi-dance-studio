@@ -77,6 +77,8 @@ function AboutPage() {
               src={studioImage}
               alt="Interior of the Riddhi Dance Studio training floor"
               loading="lazy"
+              decoding="async"
+              sizes="(min-width: 1024px) 50vw, 100vw"
               width={1024}
               height={768}
               className="rounded-3xl border border-border object-cover"

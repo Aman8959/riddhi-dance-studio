@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarDays, Sparkles, Star, Trophy, Users } from "lucide-react";
 
-import heroImage from "@/assets/hero-dance.jpg";
+import heroDesktopImage from "@/assets/hero-dance-desktop.webp";
+import heroMobileImage from "@/assets/hero-dance-mobile.webp";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { StatsStrip } from "@/components/site/StatsStrip";
@@ -69,13 +70,18 @@ function HomePage() {
   return (
     <>
       <section className="relative isolate flex min-h-[92vh] items-center overflow-hidden">
-        <img
-          src={heroImage}
-          alt="Dancer mid-leap in the Riddhi Dance Studio spotlight"
-          width={1920}
-          height={1088}
-          className="absolute inset-0 -z-10 size-full object-cover object-center"
-        />
+        <picture className="absolute inset-0 -z-10">
+          <source media="(max-width: 767px)" srcSet={heroMobileImage} />
+          <img
+            src={heroDesktopImage}
+            alt="Dancer mid-leap in the Riddhi Dance Studio spotlight"
+            width={1600}
+            height={907}
+            fetchPriority="high"
+            decoding="async"
+            className="size-full object-cover object-center"
+          />
+        </picture>
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background via-background/85 to-background/40" />
         <div className="absolute inset-0 -z-10 bg-stage" />
 
@@ -129,7 +135,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-border bg-card/30">
+      <section className="section-pad render-later border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Classes" title="Popular dance classes" />
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -147,7 +153,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Dance styles" title="Choose your style" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {danceStyles.map((s, i) => (
@@ -158,7 +164,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad border-y border-border bg-card/30">
+      <section className="section-pad render-later border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Why choose us" title="Built for real progress" align="center" />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -175,7 +181,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Faculty" title="Meet our trainers" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {trainers.map((t, i) => (
@@ -186,7 +192,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-border bg-card/30">
+      <section className="section-pad render-later border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Timetable" title="Upcoming batches" />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -212,7 +218,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Events" title="Workshops & events" />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {events.slice(0, 3).map((e, i) => (
@@ -222,6 +228,8 @@ function HomePage() {
                   src={e.image}
                   alt={e.name}
                   loading="lazy"
+                  decoding="async"
+                  sizes="(min-width: 768px) 33vw, 100vw"
                   width={1024}
                   height={768}
                   className="h-44 w-full object-cover"
@@ -244,7 +252,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad border-y border-border bg-card/30">
+      <section className="section-pad render-later border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Testimonials" title="Loved by our students" align="center" />
           <div className="mt-12">

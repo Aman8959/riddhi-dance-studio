@@ -45,6 +45,8 @@ function EventsPage() {
                   src={e.image}
                   alt={e.name}
                   loading="lazy"
+                  decoding="async"
+                  sizes="(min-width: 640px) 12rem, 100vw"
                   width={1024}
                   height={768}
                   className="h-48 w-full object-cover sm:h-auto sm:w-48"
