@@ -39,6 +39,7 @@ function doGet(event) {
 	try {
 		const params = event.parameter || {};
 		if (params.action === "list") return json(list(params.token));
+		if (params.action === "reviewsList") return json(listApprovedReviews());
 		if (params.action === "mediaList") return json(listMedia());
 		if (params.action === "contentList") return json(listContent(params.type));
 		return json({ ok: false, error: "Unknown action" }, 400);
@@ -48,7 +49,7 @@ function doGet(event) {
 }
 
 function submit(body) {
-	if (!["registration", "trial", "contact"].includes(body.type)) throw new Error("Invalid form type");
+	if (!["registration", "trial", "contact", "review"].includes(body.type)) throw new Error("Invalid form type");
 	if (!body.data || typeof body.data !== "object") throw new Error("Missing form data");
 	const id = Utilities.getUuid();
 	getSheet().appendRow([id, body.type, "new", new Date().toISOString(), JSON.stringify(body.data)]);
@@ -72,6 +73,24 @@ function list(token) {
 	return { ok: true, data: getSheet().getDataRange().getValues().slice(1).map(function (row) {
 		return { id: row[0], type: row[1], status: row[2], createdAt: row[3], data: JSON.parse(row[4] || "{}") };
 	}) };
+}
+
+function listApprovedReviews() {
+	return { ok: true, data: getSheet().getDataRange().getValues().slice(1)
+		.filter(function (row) { return String(row[1]).trim() === "review" && String(row[2]).trim() === "confirmed"; })
+		.map(function (row) {
+			const data = JSON.parse(row[4] || "{}");
+			const rating = Number(data.rating ?? 5);
+			return {
+				id: String(row[0]),
+				name: String(data.name || "Anonymous"),
+				classAttended: String(data.classAttended || "Dance class"),
+				rating: Number.isFinite(rating) ? Math.min(5, Math.max(1, rating)) : 5,
+				message: String(data.message || ""),
+				createdAt: String(row[3]),
+			};
+		})
+	};
 }
 
 function updateStatus(body) {

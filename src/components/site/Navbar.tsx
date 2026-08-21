@@ -17,6 +17,7 @@ export const navLinks = [
   { to: "/videos", label: "Videos" },
   { to: "/events", label: "Events" },
   { to: "/pricing", label: "Pricing" },
+  { to: "/testimonials", label: "Testimonials" },
   { to: "/faq", label: "FAQ" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -49,7 +50,7 @@ export function Navbar() {
       >
         <nav
           aria-label="Main navigation"
-          className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-8"
+          className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-6 px-5 sm:px-8 lg:h-20 lg:px-10 2xl:px-12"
         >
           <Link
             to="/"
@@ -67,7 +68,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0 xl:flex 2xl:gap-1">
+          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
@@ -75,7 +76,7 @@ export function Navbar() {
                   activeOptions={{ exact: link.to === "/" }}
                   activeProps={{ className: "text-gold" }}
                   inactiveProps={{ className: "text-muted-foreground" }}
-                  className="rounded-full px-2.5 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-foreground 2xl:px-3 2xl:text-xs 2xl:tracking-[0.14em]"
+                  className="whitespace-nowrap rounded-full px-2 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.08em] transition-colors hover:text-foreground 2xl:px-3 2xl:text-xs 2xl:tracking-[0.14em]"
                 >
                   {link.label}
                 </Link>

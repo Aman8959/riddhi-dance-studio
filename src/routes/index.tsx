@@ -22,11 +22,11 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Riddhi Dance Studio — Dance Classes in Pune for All Ages" },
+      { title: "Riddhi Dance Studio — Best Dance Classes in Satna for All Ages" },
       {
         name: "description",
         content:
-          "Riddhi Dance Studio offers Bollywood, Hip-Hop, Contemporary, Classical and Zumba dance classes in Pune for kids, teens and adults. Book a free trial class today.",
+          "Riddhi Dance Studio offers Bollywood, Hip-Hop, Contemporary, Classical and Zumba dance classes in Satna for kids, teens and adults. Book a free trial class today.",
       },
       { property: "og:title", content: "Riddhi Dance Studio — Move. Express. Inspire." },
       {
@@ -48,8 +48,8 @@ export const Route = createFileRoute("/")({
           address: {
             "@type": "PostalAddress",
             streetAddress: siteConfig.address.line1,
-            addressLocality: "Pune",
-            addressRegion: "Maharashtra",
+            addressLocality: "Satna",
+            addressRegion: "MadhyaPradesh",
             addressCountry: "IN",
           },
         }),
@@ -257,6 +257,11 @@ function HomePage() {
           <SectionHeading eyebrow="Testimonials" title="Loved by our students" align="center" />
           <div className="mt-12">
             <TestimonialCarousel />
+          </div>
+          <div className="mt-10 text-center">
+            <Button asChild variant="hero" size="xl">
+              <Link to="/testimonials">Read & Write Reviews</Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -77,13 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RDS Dance Studio" },
+      { title: "Riddhi Dance Studio" },
       {
         name: "description",
         content:
-          "RDS Dance Studio — professional dance classes Satna Pune for kids, teens and adults.",
+          "Riddhi Dance Studio — Best dance classes in Satna for kids, teens, and adults.",
       },
-      { name: "author", content: "RDS Dance Studio" },
+      { name: "author", content: "Riddhi Dance Studio" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

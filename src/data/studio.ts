@@ -231,7 +231,7 @@ export const trainers: Trainer[] = [
     achievements: [
       "Trained by Kings United India",
       "Trained 200+ students",
-      "20+ years of fitness coaching experience", 
+      "2+ years of fitness coaching experience", 
       "Social motivation for fitness and wellness",
       "Successfully organized and conducted Garba events"
     ],

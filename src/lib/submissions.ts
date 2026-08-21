@@ -1,4 +1,4 @@
-export type SubmissionType = "registration" | "trial" | "contact";
+export type SubmissionType = "registration" | "trial" | "contact" | "review";
 
 export type Submission = {
   id: string;
@@ -9,6 +9,14 @@ export type Submission = {
 };
 
 export type SubmissionInput = { type: SubmissionType; data: Record<string, string | number> };
+export type ReviewSubmission = {
+  id: string;
+  name: string;
+  classAttended: string;
+  rating: number;
+  message: string;
+  createdAt: string;
+};
 export type MediaKind = "image" | "poster" | "video";
 export type MediaItem = { id: string; kind: MediaKind; title: string; category: string; url: string; thumbnailUrl: string; youtubeId: string; createdAt: string };
 export type MediaInput = { kind: MediaKind; title: string; category: string; file?: { name: string; mimeType: string; base64: string }; youtubeId?: string; thumbnail?: { name: string; mimeType: string; base64: string } };
@@ -22,8 +30,9 @@ async function readResponse<T>(response: Response): Promise<T> { const body = aw
 export async function submitSubmission(input: SubmissionInput) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "submit", ...input }) }); return readResponse<{ id: string }>(response); }
 export async function adminLogin(email: string, password: string) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "login", email, password }) }); return readResponse<{ token: string }>(response); }
 export async function getSubmissions(token: string) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "list"); url.searchParams.set("token", token); return readResponse<Submission[]>(await fetch(url)); }
+export async function getApprovedReviews() { const url = new URL(requireApiUrl()); url.searchParams.set("action", "reviewsList"); url.searchParams.set("_", String(Date.now())); return readResponse<ReviewSubmission[]>(await fetch(url, { cache: "no-store" })); }
 export async function updateSubmissionStatus(token: string, id: string, status: Submission["status"]) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "status", token, id, status }) }); return readResponse<{ id: string; status: Submission["status"] }>(response); }
-export async function getMedia(_token?: string) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "mediaList"); url.searchParams.set("_", String(Date.now())); return readResponse<MediaItem[]>(await fetch(url, { cache: "no-store" })); }
+export async function getMedia(token?: string) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "mediaList"); if (token) url.searchParams.set("token", token); url.searchParams.set("_", String(Date.now())); return readResponse<MediaItem[]>(await fetch(url, { cache: "no-store" })); }
 export async function addMedia(token: string, input: MediaInput) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "mediaAdd", token, ...input }) }); return readResponse<MediaItem>(response); }
 export async function deleteMedia(token: string, id: string) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "mediaDelete", token, id }) }); return readResponse<{ id: string }>(response); }
 export async function getContent<T>(type: ManagedContentType) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "contentList"); url.searchParams.set("type", type); url.searchParams.set("_", String(Date.now())); return readResponse<ManagedContent<T>[]>(await fetch(url, { cache: "no-store" })); }
