@@ -22,7 +22,16 @@ export type MediaItem = { id: string; kind: MediaKind; title: string; category: 
 export type MediaInput = { kind: MediaKind; title: string; category: string; file?: { name: string; mimeType: string; base64: string }; youtubeId?: string; thumbnail?: { name: string; mimeType: string; base64: string } };
 export type ManagedContentType = "classes" | "plans" | "events" | "batches";
 export type ContentFile = { name: string; mimeType: string; base64: string };
-export type ManagedContent<T = Record<string, unknown>> = T & { id: string };
+type ManagedContentFields = {
+  id: string;
+  name?: unknown;
+  className?: unknown;
+  price?: unknown;
+  date?: unknown;
+  day?: unknown;
+  title?: unknown;
+};
+export type ManagedContent<T = Record<string, unknown>> = Omit<T, keyof ManagedContentFields> & ManagedContentFields;
 type ApiResponse<T> = { ok: boolean; data?: T; error?: string };
 const formsApiUrl = import.meta.env["VITE_FORMS_API_URL"] as string | undefined;
 function requireApiUrl() { if (!formsApiUrl) throw new Error("Forms backend is not configured. Set VITE_FORMS_API_URL."); if (formsApiUrl.includes("/macros/library/")) throw new Error("VITE_FORMS_API_URL is an Apps Script library URL. Use the deployed Web app URL ending in /macros/s/.../exec."); return formsApiUrl; }

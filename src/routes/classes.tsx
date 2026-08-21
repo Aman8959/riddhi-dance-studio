@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/classes")({
   head: () => ({
     meta: [
-      { title: "Dance Classes in Pune — Bollywood, Hip-Hop, Kids & More" },
+      { title: "Best Dance Classes in Satna — Bollywood, Hip-Hop, Kids & More" },
       {
         name: "description",
         content:
