@@ -146,14 +146,14 @@ function TestimonialsPage() {
             <div>
               <Label htmlFor="name">Your name *</Label>
               <Input id="name" name="name" type="text" className="mt-2" />
-              {errors.name ? <p className="mt-1 text-xs text-destructive">{errors.name}</p> : null}
+              {errors["name"] ? <p className="mt-1 text-xs text-destructive">{errors["name"]}</p> : null}
             </div>
 
             <div>
               <Label htmlFor="classAttended">Class attended *</Label>
               <Input id="classAttended" name="classAttended" type="text" className="mt-2" />
-              {errors.classAttended ? (
-                <p className="mt-1 text-xs text-destructive">{errors.classAttended}</p>
+              {errors["classAttended"] ? (
+                <p className="mt-1 text-xs text-destructive">{errors["classAttended"]}</p>
               ) : null}
             </div>
           </div>
@@ -172,13 +172,13 @@ function TestimonialsPage() {
               <option value="2">2 - Fair</option>
               <option value="1">1 - Poor</option>
             </select>
-            {errors.rating ? <p className="mt-1 text-xs text-destructive">{errors.rating}</p> : null}
+            {errors["rating"] ? <p className="mt-1 text-xs text-destructive">{errors["rating"]}</p> : null}
           </div>
 
           <div>
             <Label htmlFor="message">Your review *</Label>
             <Textarea id="message" name="message" rows={5} className="mt-2" />
-            {errors.message ? <p className="mt-1 text-xs text-destructive">{errors.message}</p> : null}
+            {errors["message"] ? <p className="mt-1 text-xs text-destructive">{errors["message"]}</p> : null}
           </div>
 
           <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>

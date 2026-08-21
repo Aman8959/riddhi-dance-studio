@@ -302,6 +302,7 @@ export type VideoItem = {
   category: string;
   youtubeId: string;
   thumbnail: string;
+  url?: string;
 };
 
 export const videos: VideoItem[] = [

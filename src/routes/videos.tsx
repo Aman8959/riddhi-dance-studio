@@ -57,7 +57,7 @@ function VideosPage() {
                       className="size-full"
                     />
                   ) : playing === v.id ? (
-                    <video src={v.url} controls autoPlay className="size-full" />
+                    <video src={v.url ?? ""} controls autoPlay className="size-full" />
                   ) : (
                     <button
                       type="button"
