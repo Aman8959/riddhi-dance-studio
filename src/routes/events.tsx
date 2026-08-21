@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { CalendarDays, Clock, MapPin, User } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
@@ -6,6 +7,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { events } from "@/data/studio";
+import { getContent } from "@/lib/submissions";
 import { whatsappLink } from "@/config/site";
 
 export const Route = createFileRoute("/events")({
@@ -28,6 +30,8 @@ export const Route = createFileRoute("/events")({
 });
 
 function EventsPage() {
+  const [managedEvents, setManagedEvents] = useState(events);
+  useEffect(() => { void getContent("events").then((next) => { if (next.length) setManagedEvents(next as typeof events); }).catch(() => undefined); }, []);
   return (
     <>
       <PageHero
@@ -38,7 +42,7 @@ function EventsPage() {
 
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-2">
-          {events.map((e, i) => (
+          {managedEvents.map((e, i) => (
             <Reveal key={e.id} delay={i * 70}>
               <article className="glass-panel flex h-full flex-col overflow-hidden rounded-2xl sm:flex-row">
                 <img

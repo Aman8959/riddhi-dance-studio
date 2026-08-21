@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
@@ -8,6 +8,7 @@ import { ClassCard } from "@/components/site/cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { danceClasses } from "@/data/studio";
+import { getContent } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/classes")({
@@ -32,12 +33,14 @@ export const Route = createFileRoute("/classes")({
 const levels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"] as const;
 
 function ClassesPage() {
+  const [classes, setClasses] = useState(danceClasses);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<(typeof levels)[number]>("All");
+  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setClasses(next as typeof danceClasses); }).catch(() => undefined); }, []);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return danceClasses.filter((c) => {
+    return classes.filter((c) => {
       const matchesQuery =
         !q ||
         [c.name, c.style, c.trainer, c.ageGroup, c.description]
@@ -47,7 +50,7 @@ function ClassesPage() {
       const matchesLevel = level === "All" || c.level === level;
       return matchesQuery && matchesLevel;
     });
-  }, [query, level]);
+  }, [classes, query, level]);
 
   return (
     <>

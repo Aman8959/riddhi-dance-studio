@@ -158,6 +158,10 @@ Manage registrations
 
 Testimonials
 
+### Managed website content setup
+
+The admin dashboard now manages classes, membership plans, events, and timetable batches through simple forms. Classes and events can include an image upload, and class fees are saved in the same form. Deploy the updated `backend/google-apps-script/Code.gs` as a new web-app version and keep the same `SHEET_ID`, `MEDIA_FOLDER_ID`, `ADMIN_EMAIL`, and `ADMIN_PASSWORD` script properties. On the first admin login, the existing studio content is copied into `Content_classes`, `Content_plans`, `Content_events`, and `Content_batches` sheets. Subsequent edits and deletes are persisted there and are reflected on the public pages and registration form.
+
 Add testimonials
 
 Approve testimonials

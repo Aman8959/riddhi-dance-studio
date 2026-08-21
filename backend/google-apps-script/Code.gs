@@ -16,6 +16,8 @@ const MEDIA_HEADERS = [
 	"thumbnailDriveId",
 ];
 const MAX_MEDIA_BYTES = 8 * 1024 * 1024;
+const CONTENT_TYPES = ["classes", "plans", "events", "batches"];
+const CONTENT_HEADERS = ["id", "data", "updatedAt"];
 
 function doPost(event) {
 	try {
@@ -25,6 +27,8 @@ function doPost(event) {
 		if (body.action === "status") return json(updateStatus(body));
 		if (body.action === "mediaAdd") return json(addMedia(body));
 		if (body.action === "mediaDelete") return json(deleteMedia(body));
+		if (body.action === "contentSave") return json(saveContent(body));
+		if (body.action === "contentDelete") return json(deleteContent(body));
 		return json({ ok: false, error: "Unknown action" }, 400);
 	} catch (error) {
 		return json({ ok: false, error: error.message }, 400);
@@ -36,6 +40,7 @@ function doGet(event) {
 		const params = event.parameter || {};
 		if (params.action === "list") return json(list(params.token));
 		if (params.action === "mediaList") return json(listMedia());
+		if (params.action === "contentList") return json(listContent(params.type));
 		return json({ ok: false, error: "Unknown action" }, 400);
 	} catch (error) {
 		return json({ ok: false, error: error.message }, 401);
@@ -57,6 +62,8 @@ function login(body) {
 	if (email !== configuredEmail || body.password !== properties.getProperty("ADMIN_PASSWORD")) throw new Error("Invalid admin credentials");
 	const token = Utilities.getUuid();
 	CacheService.getScriptCache().put("admin:" + token, "1", 21600);
+	properties.setProperty("ADMIN_SESSION_TOKEN", token);
+	properties.setProperty("ADMIN_SESSION_EXPIRES", String(Date.now() + 21600000));
 	return { ok: true, data: { token: token } };
 }
 
@@ -112,6 +119,53 @@ function deleteMedia(body) {
 	return { ok: true, data: { id: body.id } };
 }
 
+function saveContent(body) {
+	requireAdmin(body.token);
+	if (!CONTENT_TYPES.includes(body.type) || !body.item || typeof body.item !== "object") throw new Error("Invalid content request");
+	const sheet = getContentSheet(body.type);
+	const item = JSON.parse(JSON.stringify(body.item));
+	if (body.item.file) {
+		const file = saveMediaFile(body.item.file, String(body.item.name || body.item.className || "content image"));
+		item.image = file.url;
+		delete item.file;
+	}
+	const id = String(item.id || Utilities.getUuid());
+	item.id = id;
+	const values = sheet.getDataRange().getValues();
+	const rowIndex = values.findIndex(function (row) { return String(row[0]) === id; });
+	const row = [id, JSON.stringify(item), new Date().toISOString()];
+	if (rowIndex < 1) sheet.appendRow(row); else sheet.getRange(rowIndex + 1, 1, 1, row.length).setValues([row]);
+	return { ok: true, data: item };
+}
+
+function listContent(type) {
+	if (!CONTENT_TYPES.includes(type)) throw new Error("Invalid content type");
+	return { ok: true, data: getContentSheet(type).getDataRange().getValues().slice(1).map(function (row) {
+		const item = JSON.parse(row[1] || "{}");
+		item.id = String(row[0]);
+		return item;
+	}) };
+}
+
+function deleteContent(body) {
+	requireAdmin(body.token);
+	if (!CONTENT_TYPES.includes(body.type) || !body.id) throw new Error("Invalid content request");
+	const sheet = getContentSheet(body.type);
+	const rowIndex = sheet.getDataRange().getValues().findIndex(function (row) { return String(row[0]) === String(body.id); });
+	if (rowIndex < 1) throw new Error("Content item not found");
+	sheet.deleteRow(rowIndex + 1);
+	return { ok: true, data: { id: body.id } };
+}
+
+function getContentSheet(type) {
+	const id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+	if (!id) throw new Error("SHEET_ID is not configured");
+	const spreadsheet = SpreadsheetApp.openById(id.trim());
+	const sheet = spreadsheet.getSheetByName("Content_" + type) || spreadsheet.insertSheet("Content_" + type);
+	if (sheet.getLastRow() === 0) sheet.appendRow(CONTENT_HEADERS);
+	return sheet;
+}
+
 function saveMediaFile(input, title) {
 	if (!input.base64 || !input.mimeType || !input.name) throw new Error("Invalid media file");
 	const bytes = Utilities.base64Decode(input.base64);
@@ -134,7 +188,14 @@ function normalizeYoutubeId(value) {
 }
 
 function trashDriveFile(id) { if (id) DriveApp.getFileById(id).setTrashed(true); }
-function requireAdmin(token) { if (!token || CacheService.getScriptCache().get("admin:" + token) !== "1") throw new Error("Admin login required"); }
+function requireAdmin(token) {
+	if (!token) throw new Error("Admin login required");
+	const cacheValid = CacheService.getScriptCache().get("admin:" + token) === "1";
+	const properties = PropertiesService.getScriptProperties();
+	const storedToken = properties.getProperty("ADMIN_SESSION_TOKEN");
+	const expiresAt = Number(properties.getProperty("ADMIN_SESSION_EXPIRES") || 0);
+	if (!cacheValid && (storedToken !== token || expiresAt < Date.now())) throw new Error("Admin login required");
+}
 
 function getSheet() {
 	const id = PropertiesService.getScriptProperties().getProperty("SHEET_ID");

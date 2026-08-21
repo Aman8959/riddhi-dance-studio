@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { danceClasses, danceStyles } from "@/data/studio";
 import { whatsappLink } from "@/config/site";
 import { submitSubmission } from "@/lib/submissions";
+import { getContent } from "@/lib/submissions";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
@@ -48,9 +49,11 @@ const schema = z.object({
 });
 
 function RegisterPage() {
+  const [managedClasses, setManagedClasses] = useState(danceClasses);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setManagedClasses(next as typeof danceClasses); }).catch(() => undefined); }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -137,7 +140,7 @@ function RegisterPage() {
                 label="Preferred batch"
                 name="batch"
                 error={errors["batch"]}
-                options={danceClasses.map((c) => `${c.name} — ${c.timing}`)}
+                options={managedClasses.map((c) => `${c.name} — ${c.timing}`)}
               />
             </div>
             <Field

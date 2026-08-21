@@ -12,6 +12,9 @@ export type SubmissionInput = { type: SubmissionType; data: Record<string, strin
 export type MediaKind = "image" | "poster" | "video";
 export type MediaItem = { id: string; kind: MediaKind; title: string; category: string; url: string; thumbnailUrl: string; youtubeId: string; createdAt: string };
 export type MediaInput = { kind: MediaKind; title: string; category: string; file?: { name: string; mimeType: string; base64: string }; youtubeId?: string; thumbnail?: { name: string; mimeType: string; base64: string } };
+export type ManagedContentType = "classes" | "plans" | "events" | "batches";
+export type ContentFile = { name: string; mimeType: string; base64: string };
+export type ManagedContent<T = Record<string, unknown>> = T & { id: string };
 type ApiResponse<T> = { ok: boolean; data?: T; error?: string };
 const formsApiUrl = import.meta.env["VITE_FORMS_API_URL"] as string | undefined;
 function requireApiUrl() { if (!formsApiUrl) throw new Error("Forms backend is not configured. Set VITE_FORMS_API_URL."); if (formsApiUrl.includes("/macros/library/")) throw new Error("VITE_FORMS_API_URL is an Apps Script library URL. Use the deployed Web app URL ending in /macros/s/.../exec."); return formsApiUrl; }
@@ -23,3 +26,6 @@ export async function updateSubmissionStatus(token: string, id: string, status: 
 export async function getMedia(_token?: string) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "mediaList"); url.searchParams.set("_", String(Date.now())); return readResponse<MediaItem[]>(await fetch(url, { cache: "no-store" })); }
 export async function addMedia(token: string, input: MediaInput) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "mediaAdd", token, ...input }) }); return readResponse<MediaItem>(response); }
 export async function deleteMedia(token: string, id: string) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "mediaDelete", token, id }) }); return readResponse<{ id: string }>(response); }
+export async function getContent<T>(type: ManagedContentType) { const url = new URL(requireApiUrl()); url.searchParams.set("action", "contentList"); url.searchParams.set("type", type); url.searchParams.set("_", String(Date.now())); return readResponse<ManagedContent<T>[]>(await fetch(url, { cache: "no-store" })); }
+export async function saveContent<T extends Record<string, unknown>>(token: string, type: ManagedContentType, item: T & { id?: string; file?: ContentFile }) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "contentSave", token, type, item }) }); return readResponse<ManagedContent<T>>(response); }
+export async function deleteContent(token: string, type: ManagedContentType, id: string) { const response = await fetch(requireApiUrl(), { method: "POST", headers: { "content-type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "contentDelete", token, type, id }) }); return readResponse<{ id: string }>(response); }

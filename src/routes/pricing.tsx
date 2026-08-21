@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Check, IndianRupee } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
@@ -6,6 +7,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Button } from "@/components/ui/button";
 import { plans, specialServices } from "@/data/studio";
+import { getContent } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/pricing")({
@@ -28,6 +30,8 @@ export const Route = createFileRoute("/pricing")({
 });
 
 function PricingPage() {
+  const [managedPlans, setManagedPlans] = useState(plans);
+  useEffect(() => { void getContent("plans").then((next) => { if (next.length) setManagedPlans(next as typeof plans); }).catch(() => undefined); }, []);
   return (
     <>
       <PageHero
@@ -38,7 +42,7 @@ function PricingPage() {
 
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-3">
-          {plans.map((p, i) => (
+          {managedPlans.map((p, i) => (
             <Reveal key={p.id} delay={i * 80}>
               <article
                 className={cn(

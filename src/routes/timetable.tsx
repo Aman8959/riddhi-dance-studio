@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { batches } from "@/data/studio";
+import { getContent } from "@/lib/submissions";
 
 export const Route = createFileRoute("/timetable")({
   head: () => ({
@@ -35,6 +36,8 @@ export const Route = createFileRoute("/timetable")({
 const unique = (values: string[]) => ["All", ...Array.from(new Set(values))];
 
 function TimetablePage() {
+  const [managedBatches, setManagedBatches] = useState(batches);
+  useEffect(() => { void getContent("batches").then((next) => { if (next.length) setManagedBatches(next as typeof batches); }).catch(() => undefined); }, []);
   const [style, setStyle] = useState("All");
   const [day, setDay] = useState("All");
   const [trainer, setTrainer] = useState("All");
@@ -42,16 +45,16 @@ function TimetablePage() {
   const [ageGroup, setAgeGroup] = useState("All");
 
   const filters = [
-    { label: "Dance style", value: style, set: setStyle, options: unique(batches.map((b) => b.style)) },
-    { label: "Day", value: day, set: setDay, options: unique(batches.map((b) => b.day)) },
-    { label: "Age group", value: ageGroup, set: setAgeGroup, options: unique(batches.map((b) => b.ageGroup)) },
-    { label: "Trainer", value: trainer, set: setTrainer, options: unique(batches.map((b) => b.trainer)) },
-    { label: "Level", value: level, set: setLevel, options: unique(batches.map((b) => b.level)) },
+    { label: "Dance style", value: style, set: setStyle, options: unique(managedBatches.map((b) => b.style)) },
+    { label: "Day", value: day, set: setDay, options: unique(managedBatches.map((b) => b.day)) },
+    { label: "Age group", value: ageGroup, set: setAgeGroup, options: unique(managedBatches.map((b) => b.ageGroup)) },
+    { label: "Trainer", value: trainer, set: setTrainer, options: unique(managedBatches.map((b) => b.trainer)) },
+    { label: "Level", value: level, set: setLevel, options: unique(managedBatches.map((b) => b.level)) },
   ];
 
   const rows = useMemo(
     () =>
-      batches.filter(
+      managedBatches.filter(
         (b) =>
           (style === "All" || b.style === style) &&
           (day === "All" || b.day === day) &&
@@ -59,7 +62,7 @@ function TimetablePage() {
           (level === "All" || b.level === level) &&
           (ageGroup === "All" || b.ageGroup === ageGroup),
       ),
-    [style, day, trainer, level, ageGroup],
+    [managedBatches, style, day, trainer, level, ageGroup],
   );
 
   return (
