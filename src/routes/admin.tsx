@@ -33,17 +33,18 @@ function AdminPage() {
       const nextSubmissions = submissionsResult.status === "fulfilled" ? submissionsResult.value : [];
       const nextMedia = mediaResult.status === "fulfilled" ? mediaResult.value : [];
       if (submissionsResult.status === "rejected" || mediaResult.status === "rejected") toast.error("Some dashboard data could not be loaded. Check the Apps Script deployment.");
-      const current = {} as Record<ManagedContentType, ManagedContent[]>;
-      for (const key of Object.keys(defaults) as ManagedContentType[]) {
-        try {
-          const existing = await getContent(key);
-          if (existing.length) { current[key] = existing; continue; }
-          current[key] = await Promise.all(defaults[key].map((item) => saveContent(activeToken, key, item)));
-        } catch {
-          current[key] = defaults[key];
-        }
-      }
+      const keys = Object.keys(defaults) as ManagedContentType[];
+      const contentResults = await Promise.all(keys.map(async (key) => {
+        try { return [key, await getContent(key)] as const; } catch { return [key, defaults[key]] as const; }
+      }));
+      const current = Object.fromEntries(contentResults) as Record<ManagedContentType, ManagedContent[]>;
       setSubmissions(nextSubmissions); setMedia(nextMedia); setContent(current);
+      void Promise.all(keys.filter((key) => !current[key].length).map(async (key) => {
+        try {
+          const seeded = await Promise.all(defaults[key].map((item) => saveContent(activeToken, key, item)));
+          setContent((previous) => ({ ...previous, [key]: seeded }));
+        } catch { /* The fallback remains usable until the backend is deployed. */ }
+      }));
     }
     catch (error) { toast.error(error instanceof Error ? error.message : "Could not load dashboard."); }
     finally { setLoading(false); }
