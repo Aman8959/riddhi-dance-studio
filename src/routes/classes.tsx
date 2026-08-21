@@ -7,7 +7,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { ClassCard } from "@/components/site/cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { danceClasses } from "@/data/studio";
+import { danceClasses, normalizeClassImages } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
 
@@ -36,7 +36,7 @@ function ClassesPage() {
   const [classes, setClasses] = useState(danceClasses);
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<(typeof levels)[number]>("All");
-  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setClasses(next as typeof danceClasses); }).catch(() => undefined); }, []);
+  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setClasses(normalizeClassImages(next as typeof danceClasses)); }).catch(() => undefined); }, []);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

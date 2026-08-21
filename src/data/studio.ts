@@ -10,7 +10,6 @@ import wedding from "@/assets/gallery-wedding.jpg";
 import workshop from "@/assets/gallery-workshop.jpg";
 import trainer2 from "@/assets/trainer-2.jpeg";
 
-
 export type Level = "Beginner" | "Intermediate" | "Advanced" | "All Levels";
 
 export type DanceStyle = {
@@ -207,6 +206,16 @@ export const danceClasses: DanceClass[] = [
     image: studio,
   },
 ];
+
+export function normalizeClassImages(items: DanceClass[]): DanceClass[] {
+  const localImages = new Map(danceClasses.map((item) => [item.id, item.image]));
+  return items.map((item) => {
+    const image = String(item.image ?? "");
+    return image.includes("/") || image.startsWith("data:")
+      ? item
+      : { ...item, image: localImages.get(item.id) ?? bollywood };
+  });
+}
 
 export type Trainer = {
   id: string;

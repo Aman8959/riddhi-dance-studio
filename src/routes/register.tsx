@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { danceClasses, danceStyles } from "@/data/studio";
+import { danceClasses, danceStyles, normalizeClassImages } from "@/data/studio";
 import { whatsappLink } from "@/config/site";
 import { submitSubmission } from "@/lib/submissions";
 import { getContent } from "@/lib/submissions";
@@ -53,7 +53,7 @@ function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setManagedClasses(next as typeof danceClasses); }).catch(() => undefined); }, []);
+  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setManagedClasses(normalizeClassImages(next as typeof danceClasses)); }).catch(() => undefined); }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
