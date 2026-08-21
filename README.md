@@ -71,7 +71,7 @@ npm run preview
 ```bash
 npm run dev        # local development server
 npm run build      # production build
-npm run preview    # preview production output
+  npm run preview    # preview the Nitro production server
 npm run lint       # lint the project
 npm run format     # format code with Prettier
 ```
