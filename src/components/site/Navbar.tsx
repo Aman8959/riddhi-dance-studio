@@ -37,7 +37,7 @@ export function Navbar() {
       >
         <nav
           aria-label="Main navigation"
-          className="mx-auto grid h-16 w-full max-w-[1600px] grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:h-20 lg:gap-6 lg:px-8 xl:px-10"
+          className="relative mx-auto flex h-16 w-full max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:gap-6 lg:px-8 xl:px-10"
         >
           <Link
             to="/"
@@ -58,7 +58,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          <ul className="hidden min-w-0 items-center justify-self-center gap-0.5 xl:flex 2xl:gap-1">
+          <ul className="absolute left-1/2 hidden min-w-0 -translate-x-1/2 items-center gap-0.5 xl:flex 2xl:gap-1">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
@@ -74,7 +74,7 @@ export function Navbar() {
             ))}
           </ul>
 
-          <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:gap-2">
             <Button
               asChild
               variant="glass"
