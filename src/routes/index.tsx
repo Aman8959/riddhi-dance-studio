@@ -158,7 +158,7 @@ function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Classes" title="Popular dance classes" />
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {danceClasses.slice(0, 6).map((c, i) => (
+            {danceClasses.slice(0, 3).map((c, i) => (
               <Reveal key={c.id} delay={i * 60}>
                 <ClassCard item={c} />
               </Reveal>
@@ -212,11 +212,16 @@ function HomePage() {
       <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Dance styles" title="Choose your style" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {danceStyles.map((s, i) => (
+          {danceStyles.slice(0, 3).map((s, i) => (
             <Reveal key={s.slug} delay={i * 60}>
               <StyleCard item={s} />
             </Reveal>
           ))}
+        </div>
+        <div className="mt-10">
+          <Button asChild variant="glass" size="xl">
+            <Link to="/styles">View All Styles</Link>
+          </Button>
         </div>
       </section>
 
@@ -252,7 +257,7 @@ function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Timetable" title="Upcoming batches" />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {batches.slice(0, 6).map((b, i) => (
+            {batches.slice(0, 3).map((b, i) => (
               <Reveal key={b.id} delay={i * 50}>
                 <div className="glass-panel rounded-2xl p-5">
                   <p className="text-xs uppercase tracking-[0.2em] text-gold">
