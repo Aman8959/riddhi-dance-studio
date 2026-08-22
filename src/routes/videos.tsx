@@ -6,23 +6,16 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { videos } from "@/data/studio";
 import { getMedia, type MediaItem } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/videos")({
-  head: () => ({
-    meta: [
-      { title: "Dance Videos — Performances & Choreography | Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Watch choreography reels, student performances, workshop highlights and behind-the-scenes videos from Riddhi Dance Studio.",
-      },
-      { property: "og:title", content: "Riddhi Dance Studio Videos" },
-      {
-        property: "og:description",
-        content: "Choreography, student performances and workshop highlights on video.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Videos & Performances | Riddhi Dance Studio Satna",
+      description:
+        "Watch choreography reels, student performances, workshop highlights and behind-the-scenes videos from Riddhi Dance Studio in Satna.",
+      path: "/videos",
+    }),
   component: VideosPage,
 });
 

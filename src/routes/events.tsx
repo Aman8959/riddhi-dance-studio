@@ -9,20 +9,45 @@ import { Button } from "@/components/ui/button";
 import { events } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { whatsappLink } from "@/config/site";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/events")({
   head: () => ({
-    meta: [
-      { title: "Dance Events & Workshops — Riddhi Dance Studio" },
+    ...createSeoHead({
+      title: "Dance Events & Workshops in Satna | Riddhi Dance Studio",
+      description:
+        "Discover upcoming dance workshops, intensives and stage events at Riddhi Dance Studio in Satna.",
+      path: "/events",
+    }),
+    scripts: [
       {
-        name: "description",
-        content:
-          "Upcoming dance workshops and events at Riddhi Dance Studio, including Bollywood workshops, hip-hop intensives and our annual showcase.",
-      },
-      { property: "og:title", content: "Upcoming Dance Events & Workshops" },
-      {
-        property: "og:description",
-        content: "Workshops, intensives and stage productions you can register for.",
+        type: "application/ld+json",
+        children: JSON.stringify(
+          events.map((event) => ({
+            "@context": "https://schema.org",
+            "@type": "Event",
+            name: event.name,
+            description: event.description,
+            startDate: new Date(`${event.date} ${event.time}`).toISOString(),
+            eventStatus: "https://schema.org/EventScheduled",
+            eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+            location: {
+              "@type": "Place",
+              name: event.location,
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Satna",
+                addressRegion: "Madhya Pradesh",
+                addressCountry: "IN",
+              },
+            },
+            organizer: {
+              "@type": "DanceSchool",
+              name: "Riddhi Dance Studio",
+              url: "https://www.riddhidancestudio.com/",
+            },
+          })),
+        ),
       },
     ],
   }),

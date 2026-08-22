@@ -9,22 +9,16 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { faqs } from "@/data/studio";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
-    meta: [
-      { title: "FAQ — Dance Class Questions Answered | Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Answers about joining dance classes at Riddhi Dance Studio: trial classes, minimum age, fees, multiple styles and performance opportunities.",
-      },
-      { property: "og:title", content: "Frequently Asked Questions" },
-      {
-        property: "og:description",
-        content: "Trials, age groups, fees, styles and performances — answered.",
-      },
-    ],
+    ...createSeoHead({
+      title: "Dance Class FAQ | Riddhi Dance Studio Satna",
+      description:
+        "Find answers about dance class trials, ages, fees, styles and performance opportunities at Riddhi Dance Studio in Satna.",
+      path: "/faq",
+    }),
     scripts: [
       {
         type: "application/ld+json",

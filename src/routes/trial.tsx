@@ -12,23 +12,16 @@ import { danceStyles } from "@/data/studio";
 import { cn } from "@/lib/utils";
 import { submitSubmission } from "@/lib/submissions";
 import { Link } from "@tanstack/react-router";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/trial")({
-  head: () => ({
-    meta: [
-      { title: "Book a Free Trial Dance Class — Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Book a free trial dance class at Riddhi Dance Studio. Pick your style, date and available time slot — no commitment required.",
-      },
-      { property: "og:title", content: "Book a Free Trial Dance Class" },
-      {
-        property: "og:description",
-        content: "Choose a style, date and slot and try a full class free of cost.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Book a Free Trial Dance Class | Riddhi Dance Studio",
+      description:
+        "Book a free trial dance class at Riddhi Dance Studio in Satna. Choose your style, date and available time slot.",
+      path: "/trial",
+    }),
   component: TrialPage,
 });
 

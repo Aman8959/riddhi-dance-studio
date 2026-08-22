@@ -7,6 +7,21 @@
     <priority>1.0</priority>
   </url>
 
+  <url><loc>https://www.riddhidancestudio.com/about</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/classes</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/styles</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/trainers</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/timetable</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/pricing</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/events</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/gallery</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/videos</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/testimonials</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/faq</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/contact</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/trial</loc></url>
+  <url><loc>https://www.riddhidancestudio.com/register</loc></url>
+
   <url>
     <loc>https://www.riddhidancestudio.com/privacy-policy</loc>
     <changefreq>yearly</changefreq>

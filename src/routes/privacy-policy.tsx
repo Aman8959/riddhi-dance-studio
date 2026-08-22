@@ -3,23 +3,16 @@ import { FileCheck2, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { siteConfig } from "@/config/site";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/privacy-policy")({
-  head: () => ({
-    meta: [
-      { title: "Privacy Policy | Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Privacy Policy for Riddhi Dance Studio. Learn how we collect, use, and protect your personal information.",
-      },
-      { property: "og:title", content: "Privacy Policy | Riddhi Dance Studio" },
-      {
-        property: "og:description",
-        content: "Privacy Policy for Riddhi Dance Studio.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Privacy Policy | Riddhi Dance Studio",
+      description:
+        "Read how Riddhi Dance Studio collects, uses and protects personal information submitted through its website.",
+      path: "/privacy-policy",
+    }),
   component: PrivacyPolicyPage,
 });
 

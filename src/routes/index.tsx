@@ -11,6 +11,7 @@ import { ClassCard, StyleCard, TrainerCard } from "@/components/site/cards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
+import { createSeoHead } from "@/config/seo";
 import { batches, danceClasses, danceStyles, events, faqs, plans, trainers, videos } from "@/data/studio";
 import {
   Accordion,
@@ -21,37 +22,48 @@ import {
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Riddhi Dance Studio — Best Dance Classes in Satna for All Ages" },
-      {
-        name: "description",
-        content:
-          "Riddhi Dance Studio offers Bollywood, Hip-Hop, Contemporary, Classical and Zumba dance classes in Satna for kids, teens and adults. Book a free trial class today.",
-      },
-      { property: "og:title", content: "Riddhi Dance Studio — Move. Express. Inspire." },
-      {
-        property: "og:description",
-        content:
-          "Professional dance training in Satna across ten styles. Free trial classes, flexible batches and stage performance opportunities.",
-      },
-    ],
+    ...createSeoHead({
+      title: "Riddhi Dance Studio | Best Dance Classes in Satna, MP",
+      description:
+        "Join Riddhi Dance Studio in Satna for Bollywood, Hip-Hop, Contemporary, Classical and Zumba dance classes for kids, teens and adults. Book a free trial class today.",
+      path: "/",
+    }),
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "DanceSchool",
-          name: siteConfig.name,
-          description: siteConfig.shortDescription,
-          telephone: siteConfig.phone,
-          email: siteConfig.email,
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: siteConfig.address.line1,
-            addressLocality: "Satna",
-            addressRegion: "MadhyaPradesh",
-            addressCountry: "IN",
-          },
+          "@graph": [
+            {
+              "@type": "DanceSchool",
+              "@id": "https://www.riddhidancestudio.com/#studio",
+              name: siteConfig.name,
+              description: siteConfig.shortDescription,
+              url: "https://www.riddhidancestudio.com/",
+              telephone: siteConfig.phone,
+              email: siteConfig.email,
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: siteConfig.address.line1,
+                addressLocality: "Satna",
+                addressRegion: "Madhya Pradesh",
+                postalCode: "485001",
+                addressCountry: "IN",
+              },
+              sameAs: [
+                siteConfig.social.instagram,
+                siteConfig.social.facebook,
+                siteConfig.social.youtube,
+              ],
+            },
+            {
+              "@type": "WebSite",
+              "@id": "https://www.riddhidancestudio.com/#website",
+              name: siteConfig.name,
+              url: "https://www.riddhidancestudio.com/",
+              publisher: { "@id": "https://www.riddhidancestudio.com/#studio" },
+            },
+          ],
         }),
       },
     ],
@@ -89,9 +101,12 @@ function HomePage() {
           <Badge className="bg-gold text-gold-foreground">
             Now enrolling · Free trial class
           </Badge>
-          <h1 className="mt-6 max-w-3xl text-6xl uppercase leading-[0.88] tracking-wide sm:text-7xl lg:text-8xl">
-            Move. <span className="text-gradient-brand">Express.</span> Inspire.
+          <h1 className="mt-6 max-w-3xl text-5xl uppercase leading-[0.88] tracking-wide sm:text-6xl lg:text-7xl">
+            Dance Classes in Satna for Kids, Teens & Adults
           </h1>
+          <p className="mt-4 font-display text-2xl uppercase tracking-wide text-gradient-brand">
+            Move. Express. Inspire.
+          </p>
           <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             {siteConfig.shortDescription} Train with working performers, learn a real syllabus and
             perform on a real stage.

@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { testimonials } from "@/data/studio";
 import { getApprovedReviews, submitSubmission } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
@@ -21,21 +22,13 @@ const schema = z.object({
 });
 
 export const Route = createFileRoute("/testimonials")({
-  head: () => ({
-    meta: [
-      { title: "Student & Parent Reviews — Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Read reviews from students and parents of Riddhi Dance Studio across Bollywood, kids dance, hip-hop, classical and wedding choreography.",
-      },
-      { property: "og:title", content: "What Our Students Say" },
-      {
-        property: "og:description",
-        content: "Honest reviews from students and parents at Riddhi Dance Studio.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Class Reviews | Riddhi Dance Studio Satna",
+      description:
+        "Read reviews from students and parents about classes, trainers and experiences at Riddhi Dance Studio in Satna.",
+      path: "/testimonials",
+    }),
   component: TestimonialsPage,
 });
 

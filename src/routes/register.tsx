@@ -13,23 +13,16 @@ import { danceClasses, danceStyles, normalizeClassImages } from "@/data/studio";
 import { whatsappLink } from "@/config/site";
 import { submitSubmission } from "@/lib/submissions";
 import { getContent } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/register")({
-  head: () => ({
-    meta: [
-      { title: "Online Registration — Join Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Register online for dance classes at Riddhi Dance Studio. Choose your dance style and preferred batch, and our team confirms your seat.",
-      },
-      { property: "og:title", content: "Register for Dance Classes" },
-      {
-        property: "og:description",
-        content: "Fill the student registration form and we confirm your batch on WhatsApp.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Register for Dance Classes | Riddhi Dance Studio Satna",
+      description:
+        "Register online for dance classes at Riddhi Dance Studio in Satna and choose your preferred style and batch.",
+      path: "/register",
+    }),
   component: RegisterPage,
 });
 

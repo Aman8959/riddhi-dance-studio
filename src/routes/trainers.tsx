@@ -4,23 +4,16 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { TrainerCard } from "@/components/site/cards";
 import { trainers } from "@/data/studio";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/trainers")({
-  head: () => ({
-    meta: [
-      { title: "Our Dance Trainers — Riddhi Dance Studio Faculty" },
-      {
-        name: "description",
-        content:
-          "Meet the professional dance instructors at Riddhi Dance Studio: specialisations, experience and achievements of our Bollywood, Hip-Hop and Classical faculty.",
-      },
-      { property: "og:title", content: "Meet Our Dance Trainers" },
-      {
-        property: "og:description",
-        content: "Experienced, performance-tested faculty across Bollywood, Hip-Hop and Classical dance.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Trainers in Satna | Riddhi Dance Studio",
+      description:
+        "Meet the experienced dance trainers at Riddhi Dance Studio in Satna, with expertise across Bollywood, Hip-Hop, Classical and fitness dance.",
+      path: "/trainers",
+    }),
   component: TrainersPage,
 });
 

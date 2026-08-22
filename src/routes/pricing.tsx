@@ -9,23 +9,16 @@ import { Button } from "@/components/ui/button";
 import { plans, specialServices } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/pricing")({
-  head: () => ({
-    meta: [
-      { title: "Dance Class Fees & Membership Plans — Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Transparent monthly dance class fees at Riddhi Dance Studio: Basic, Standard and Premium memberships with unlimited classes and workshop access.",
-      },
-      { property: "og:title", content: "Membership Plans & Fees" },
-      {
-        property: "og:description",
-        content: "Basic, Standard and Premium dance memberships with clear monthly pricing.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Class Fees & Membership Plans | Riddhi Dance Studio",
+      description:
+        "Compare transparent dance class fees and membership plans at Riddhi Dance Studio in Satna, from Basic to Premium.",
+      path: "/pricing",
+    }),
   component: PricingPage,
 });
 

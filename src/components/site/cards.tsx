@@ -85,7 +85,7 @@ export function StyleCard({ item }: { item: DanceStyle }) {
           {item.description}
         </p>
         <Button asChild variant="glass" size="sm" className="mt-4 rounded-full">
-          <Link to="/classes">Learn More</Link>
+          <Link to="/classes">Explore {item.name} Dance Classes</Link>
         </Button>
       </div>
     </article>

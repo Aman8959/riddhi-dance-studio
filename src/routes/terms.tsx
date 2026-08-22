@@ -3,23 +3,16 @@ import { FileCheck2, Mail, MapPin, Phone, Scale } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { siteConfig } from "@/config/site";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/terms")({
-  head: () => ({
-    meta: [
-      { title: "Terms of Service | Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Terms of Service for Riddhi Dance Studio. Read our terms and conditions for using our website and services.",
-      },
-      { property: "og:title", content: "Terms of Service | Riddhi Dance Studio" },
-      {
-        property: "og:description",
-        content: "Terms of Service for Riddhi Dance Studio.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Terms of Service | Riddhi Dance Studio",
+      description:
+        "Read the terms and conditions for using the Riddhi Dance Studio website, booking trials and joining classes.",
+      path: "/terms",
+    }),
   component: TermsOfServicePage,
 });
 

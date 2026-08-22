@@ -19,8 +19,8 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h1 className="text-4xl font-bold text-foreground">Page Not Found</h1>
+        <p className="mt-4 text-7xl font-bold text-foreground">404</p>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -85,7 +85,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "Riddhi Dance Studio" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Riddhi Dance Studio" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "index, follow" },
     ],
     links: [
       {

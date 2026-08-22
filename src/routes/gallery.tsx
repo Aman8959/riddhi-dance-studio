@@ -7,23 +7,16 @@ import { Reveal } from "@/components/site/Reveal";
 import { Button } from "@/components/ui/button";
 import { galleryCategories, galleryItems, type GalleryItem } from "@/data/studio";
 import { getMedia, type MediaItem } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({
-    meta: [
-      { title: "Gallery — Riddhi Dance Studio Performances & Classes" },
-      {
-        name: "description",
-        content:
-          "Photos from Riddhi Dance Studio: classes, stage performances, competitions, workshops and studio events.",
-      },
-      { property: "og:title", content: "Riddhi Dance Studio Gallery" },
-      {
-        property: "og:description",
-        content: "Classes, performances, competitions and workshops in pictures.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Studio Gallery | Riddhi Dance Studio Satna",
+      description:
+        "Explore photos of classes, performances, competitions, workshops and studio events at Riddhi Dance Studio in Satna.",
+      path: "/gallery",
+    }),
   component: GalleryPage,
 });
 

@@ -7,23 +7,16 @@ import { SectionHeading } from "@/components/site/SectionHeading";
 import { StatsStrip } from "@/components/site/StatsStrip";
 import studioImage from "@/assets/gallery-studio.jpg";
 import { specialServices } from "@/data/studio";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About Riddhi Dance Studio — Our Vision & Training Approach" },
-      {
-        name: "description",
-        content:
-          "Meet Riddhi Dance Studio: our vision, dance philosophy, training approach and why 500+ students choose us for dance classes.",
-      },
-      { property: "og:title", content: "About Riddhi Dance Studio" },
-      {
-        property: "og:description",
-        content: "Our vision, philosophy and training approach for dancers of every age and level.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "About Riddhi Dance Studio | Dance Academy in Satna",
+      description:
+        "Learn about Riddhi Dance Studio in Satna, our dance philosophy, training approach and commitment to dancers of every age.",
+      path: "/about",
+    }),
   component: AboutPage,
 });
 

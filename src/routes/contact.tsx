@@ -13,22 +13,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { mapsEmbed, mapsLink, siteConfig, whatsappLink } from "@/config/site";
 import { submitSubmission } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
-    meta: [
-      { title: "Contact Riddhi Dance Studio — Satna Dance Academy" },
-      {
-        name: "description",
-        content:
-          "Visit or call Riddhi Dance Studio in Satna, Madhya Pradesh. Get directions, business hours, WhatsApp support and send us a message.",
-      },
-      { property: "og:title", content: "Contact Riddhi Dance Studio" },
-      {
-        property: "og:description",
-        content: "Address, phone, WhatsApp, business hours and directions to our Satna studio.",
-      },
-    ],
+    ...createSeoHead({
+      title: "Contact Riddhi Dance Studio | Dance Classes in Satna",
+      description:
+        "Contact Riddhi Dance Studio in Satna for dance classes, directions, hours, WhatsApp support and enquiries.",
+      path: "/contact",
+    }),
     scripts: [
       {
         type: "application/ld+json",
@@ -123,11 +117,11 @@ function ContactPage() {
           <ul className="grid gap-5 text-sm">
             <li className="glass-panel flex gap-3 rounded-2xl p-5">
               <MapPin className="size-5 shrink-0 text-primary" />
-              <span>
+              <address className="not-italic">
                 {siteConfig.address.line1}
                 <br />
                 {siteConfig.address.line2}
-              </span>
+              </address>
             </li>
             <li className="glass-panel flex gap-3 rounded-2xl p-5">
               <Phone className="size-5 shrink-0 text-primary" />

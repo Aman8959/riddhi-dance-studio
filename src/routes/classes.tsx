@@ -10,23 +10,16 @@ import { Input } from "@/components/ui/input";
 import { danceClasses, normalizeClassImages } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { cn } from "@/lib/utils";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/classes")({
-  head: () => ({
-    meta: [
-      { title: "Best Dance Classes in Satna — Bollywood, Hip-Hop, Kids & More" },
-      {
-        name: "description",
-        content:
-          "Explore dance classes at Riddhi Dance Studio: Bollywood, Hip-Hop, Contemporary, Classical, Kids Dance, Zumba, wedding and personal training with fees and batch timings.",
-      },
-      { property: "og:title", content: "Dance Classes at Riddhi Dance Studio" },
-      {
-        property: "og:description",
-        content: "Class details, age groups, levels, timings, trainers and fees — book a free trial.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Classes in Satna | Bollywood, Hip-Hop, Classical & More",
+      description:
+        "Explore Bollywood, Hip-Hop, Contemporary, Classical, Kids Dance, Zumba and more at Riddhi Dance Studio in Satna, with fees and batch timings.",
+      path: "/classes",
+    }),
   component: ClassesPage,
 });
 
@@ -56,7 +49,7 @@ function ClassesPage() {
     <>
       <PageHero
         eyebrow="Dance classes"
-        title="Find the class built for you"
+        title="Dance Classes in Satna for Every Dancer"
         description="Ten styles, structured levels and batches that run morning to night. Every class starts with a free trial so you can feel the room before you commit."
       />
 

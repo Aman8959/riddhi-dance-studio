@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { addMedia, adminLogin, deleteContent, deleteMedia, getContent, getMedia, getSubmissions, saveContent, type ManagedContent, type ManagedContentType, type MediaInput, type MediaItem, type Submission, updateSubmissionStatus } from "@/lib/submissions";
 import { batches, danceClasses, events, plans } from "@/data/studio";
 
-export const Route = createFileRoute("/admin")({ head: () => ({ meta: [{ title: "Admin Dashboard — Riddhi Dance Studio" }] }), component: AdminPage });
+export const Route = createFileRoute("/admin")({ head: () => ({ meta: [{ title: "Admin Dashboard — Riddhi Dance Studio" }, { name: "robots", content: "noindex, nofollow" }] }), component: AdminPage });
 const tokenKey = "riddhi-admin-token";
 
 function AdminPage() {

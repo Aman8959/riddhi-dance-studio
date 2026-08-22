@@ -13,23 +13,16 @@ import {
 } from "@/components/ui/select";
 import { batches } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
+import { createSeoHead } from "@/config/seo";
 
 export const Route = createFileRoute("/timetable")({
-  head: () => ({
-    meta: [
-      { title: "Batches & Timetable — Riddhi Dance Studio" },
-      {
-        name: "description",
-        content:
-          "Weekly dance batch timetable at Riddhi Dance Studio. Filter by dance style, age group, day, trainer and level, then book your batch.",
-      },
-      { property: "og:title", content: "Dance Batches & Weekly Timetable" },
-      {
-        property: "og:description",
-        content: "Filter our weekly dance timetable by style, day, trainer and level.",
-      },
-    ],
-  }),
+  head: () =>
+    createSeoHead({
+      title: "Dance Class Timetable & Batches | Riddhi Dance Studio",
+      description:
+        "View and filter the weekly dance class timetable at Riddhi Dance Studio in Satna by style, age, day, trainer and level.",
+      path: "/timetable",
+    }),
   component: TimetablePage,
 });
 
