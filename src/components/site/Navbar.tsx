@@ -3,24 +3,9 @@ import { Menu, ShieldCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { navLinks } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-
-export const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
-  { to: "/classes", label: "Classes" },
-  { to: "/styles", label: "Styles" },
-  { to: "/trainers", label: "Trainers" },
-  { to: "/timetable", label: "Timetable" },
-  { to: "/gallery", label: "Gallery" },
-  { to: "/videos", label: "Videos" },
-  { to: "/events", label: "Events" },
-  { to: "/pricing", label: "Pricing" },
-  { to: "/testimonials", label: "Testimonials" },
-  { to: "/faq", label: "FAQ" },
-  { to: "/contact", label: "Contact" },
-] as const;
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -45,30 +30,35 @@ export function Navbar() {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-          scrolled ? "glass-panel border-x-0 border-t-0 shadow-none" : "border-b border-transparent",
+          scrolled
+            ? "glass-panel border-x-0 border-t-0 shadow-none"
+            : "border-b border-transparent",
         )}
       >
         <nav
           aria-label="Main navigation"
-          className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-6 px-5 sm:px-8 lg:h-20 lg:px-10 2xl:px-12"
+          className="mx-auto grid h-16 w-full max-w-[1600px] grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:h-20 lg:gap-6 lg:px-8 xl:px-10"
         >
           <Link
             to="/"
+            aria-label="Riddhi Dance Studio"
             className="group flex shrink-0 items-center gap-2 lg:gap-3"
             onClick={() => setOpen(false)}
           >
             <span className="grid size-10 place-items-center rounded-full bg-[image:var(--gradient-brand)] font-display text-xl text-primary-foreground">
               R
             </span>
-            <span className="leading-none">
-              <span className="block font-display text-lg uppercase tracking-widest">Riddhi</span>
-              <span className="block text-[0.6rem] uppercase tracking-[0.3em] text-muted-foreground">
+            <span className="min-w-0 leading-none">
+              <span className="block font-logo text-xl font-semibold leading-none tracking-[0.06em] text-gradient-brand transition-transform duration-300 group-hover:scale-[1.02] sm:text-2xl lg:text-3xl">
+                Riddhi
+              </span>
+              <span className="mt-1 block whitespace-nowrap font-logo text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
                 Dance Studio
               </span>
             </span>
           </Link>
 
-          <ul className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex 2xl:gap-1">
+          <ul className="hidden min-w-0 items-center justify-self-center gap-0.5 xl:flex 2xl:gap-1">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
@@ -85,12 +75,22 @@ export function Navbar() {
           </ul>
 
           <div className="flex shrink-0 items-center gap-1.5 lg:gap-2">
-            <Button asChild variant="glass" size="sm" className="hidden lg:inline-flex lg:h-10 lg:px-3 lg:text-xs 2xl:px-4">
+            <Button
+              asChild
+              variant="glass"
+              size="sm"
+              className="hidden lg:inline-flex lg:h-10 lg:px-3 lg:text-xs 2xl:px-4"
+            >
               <Link to="/admin">
                 <ShieldCheck className="size-4" /> Admin Login
               </Link>
             </Button>
-            <Button asChild variant="hero" size="sm" className="hidden sm:inline-flex lg:h-10 lg:px-3.5 lg:text-xs 2xl:px-4">
+            <Button
+              asChild
+              variant="hero"
+              size="sm"
+              className="hidden sm:inline-flex lg:h-10 lg:px-3.5 lg:text-xs 2xl:px-4"
+            >
               <Link to="/trial">Book a Trial</Link>
             </Button>
             <button

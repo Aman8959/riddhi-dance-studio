@@ -17,7 +17,7 @@ const quickLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card/40">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-5 lg:px-8">
         <div>
           <p className="font-display text-2xl uppercase tracking-widest">{siteConfig.name}</p>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -77,6 +77,27 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Legal</h3>
+          <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+            <li>
+              <Link to="/privacy-policy" className="transition-colors hover:text-foreground">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link to="/terms" className="transition-colors hover:text-foreground">
+                Terms of Service
+              </Link>
+            </li>
+            <li>
+              <Link to="/contact" className="transition-colors hover:text-foreground">
+                Contact Us
+              </Link>
+            </li>
           </ul>
         </div>
 

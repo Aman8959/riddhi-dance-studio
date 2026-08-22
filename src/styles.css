@@ -7,6 +7,7 @@
 @theme {
   --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
   --font-sans: "Barlow", system-ui, sans-serif;
+  --font-logo: "Palatino Linotype", "Book Antiqua", Georgia, serif;
 }
 
 /*
@@ -107,13 +108,23 @@
   --sidebar-border: oklch(0.99 0 0 / 12%);
   --sidebar-ring: oklch(0.62 0.24 2);
 
-  --gradient-brand: linear-gradient(120deg, oklch(0.62 0.24 2), oklch(0.72 0.19 35), oklch(0.84 0.15 85));
-  --gradient-stage: radial-gradient(
+  --gradient-brand: linear-gradient(
+    120deg,
+    oklch(0.62 0.24 2),
+    oklch(0.72 0.19 35),
+    oklch(0.84 0.15 85)
+  );
+  --gradient-stage:
+    radial-gradient(
       120% 90% at 12% 0%,
       color-mix(in oklab, var(--primary) 30%, transparent),
       transparent 60%
     ),
-    radial-gradient(100% 80% at 95% 10%, color-mix(in oklab, var(--gold) 18%, transparent), transparent 60%);
+    radial-gradient(
+      100% 80% at 95% 10%,
+      color-mix(in oklab, var(--gold) 18%, transparent),
+      transparent 60%
+    );
   --shadow-glow: 0 20px 60px -20px color-mix(in oklab, var(--primary) 55%, transparent);
   --shadow-card: 0 24px 60px -32px oklch(0 0 0 / 80%);
 }
@@ -209,6 +220,106 @@
 @utility render-later {
   content-visibility: auto;
   contain-intrinsic-size: auto 720px;
+}
+
+.legal-content {
+  max-width: 48rem;
+  margin-inline: auto;
+  color: var(--color-muted-foreground);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.legal-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  border: 1px solid color-mix(in oklab, var(--color-gold) 35%, var(--color-border));
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--color-gold) 8%, var(--color-card));
+  padding: 1.5rem;
+}
+
+.legal-content h2,
+.legal-content h3 {
+  color: var(--color-foreground);
+}
+
+.legal-content > h2 {
+  margin-top: 3.5rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.25rem;
+  font-size: 1.65rem;
+  line-height: 1.15;
+}
+
+.legal-content > h2::first-letter {
+  color: var(--color-gold);
+}
+
+.legal-content p {
+  margin-top: 1rem;
+}
+
+.legal-content ul {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.legal-content li {
+  position: relative;
+  padding-left: 1.35rem;
+}
+
+.legal-content li::before {
+  position: absolute;
+  top: 0.7em;
+  left: 0.2rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 0.08rem;
+  background: var(--gradient-brand);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.legal-content ul.mt-4 li {
+  padding-left: 0;
+}
+
+.legal-content ul.mt-4 li::before {
+  display: none;
+}
+
+.legal-card {
+  display: grid;
+  gap: 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.9rem;
+  background: color-mix(in oklab, var(--color-card) 78%, transparent);
+  padding: 1.1rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.legal-card h3 {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.legal-card p {
+  margin-top: 0;
+}
+
+@media (max-width: 640px) {
+  .legal-meta {
+    display: grid;
+    gap: 1rem;
+  }
 }
 
 @keyframes rise-in {

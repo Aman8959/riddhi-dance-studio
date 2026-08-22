@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Professional dance training in Pune across ten styles. Free trial classes, flexible batches and stage performance opportunities.",
+          "Professional dance training in Satna across ten styles. Free trial classes, flexible batches and stage performance opportunities.",
       },
     ],
     scripts: [

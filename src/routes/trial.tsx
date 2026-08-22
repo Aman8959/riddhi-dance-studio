@@ -5,11 +5,13 @@ import { z } from "zod";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { danceStyles } from "@/data/studio";
 import { cn } from "@/lib/utils";
 import { submitSubmission } from "@/lib/submissions";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/trial")({
   head: () => ({
@@ -39,6 +41,7 @@ const schema = z.object({
   style: z.string().trim().min(1, "Select a dance style"),
   date: z.string().trim().min(1, "Pick a preferred date"),
   time: z.string().trim().min(1, "Pick a time slot"),
+  acceptedTerms: z.literal("on", { errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }) }),
 });
 
 function TrialPage() {
@@ -185,6 +188,19 @@ function TrialPage() {
               ))}
             </div>
             {errors["time"] ? <p className="mt-2 text-xs text-destructive">{errors["time"]}</p> : null}
+          </div>
+
+          <div className="mt-2 rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="flex items-start gap-3">
+              <Checkbox id="acceptedTerms" name="acceptedTerms" aria-invalid={Boolean(errors["acceptedTerms"])} />
+              <Label htmlFor="acceptedTerms" className="text-xs font-normal leading-relaxed text-muted-foreground">
+                I agree to the{" "}
+                <Link to="/terms" className="text-gold hover:underline">Terms of Service</Link>{" "}
+                and acknowledge the{" "}
+                <Link to="/privacy-policy" className="text-gold hover:underline">Privacy Policy</Link>.
+              </Label>
+            </div>
+            {errors["acceptedTerms"] ? <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p> : null}
           </div>
 
           <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>

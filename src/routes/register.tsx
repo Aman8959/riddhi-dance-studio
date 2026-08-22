@@ -1,10 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,6 +47,7 @@ const schema = z.object({
   experience: z.string().trim().max(300).optional().or(z.literal("")),
   startDate: z.string().trim().min(1, "Select a preferred start date"),
   message: z.string().trim().max(600).optional().or(z.literal("")),
+  acceptedTerms: z.literal("on", { errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }) }),
 });
 
 function RegisterPage() {
@@ -157,6 +159,18 @@ function RegisterPage() {
             <div>
               <Label htmlFor="message">Message</Label>
               <Textarea id="message" name="message" rows={3} maxLength={600} className="mt-2" />
+            </div>
+            <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+              <div className="flex items-start gap-3">
+                <Checkbox id="acceptedTerms" name="acceptedTerms" aria-invalid={Boolean(errors["acceptedTerms"])} />
+                <Label htmlFor="acceptedTerms" className="text-xs font-normal leading-relaxed text-muted-foreground">
+                  I agree to the{" "}
+                  <Link to="/terms" className="text-gold hover:underline">Terms of Service</Link>{" "}
+                  and acknowledge the{" "}
+                  <Link to="/privacy-policy" className="text-gold hover:underline">Privacy Policy</Link>.
+                </Label>
+              </div>
+              {errors["acceptedTerms"] ? <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p> : null}
             </div>
             <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
               {submitting ? "Submitting..." : "Submit Registration"}

@@ -3,9 +3,11 @@ import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Link } from "@tanstack/react-router";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,16 +17,16 @@ import { submitSubmission } from "@/lib/submissions";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact Riddhi Dance Studio — Pune Dance Academy" },
+      { title: "Contact Riddhi Dance Studio — Satna Dance Academy" },
       {
         name: "description",
         content:
-          "Visit or call Riddhi Dance Studio in Shivajinagar, Pune. Get directions, business hours, WhatsApp support and send us a message.",
+          "Visit or call Riddhi Dance Studio in Satna, Madhya Pradesh. Get directions, business hours, WhatsApp support and send us a message.",
       },
       { property: "og:title", content: "Contact Riddhi Dance Studio" },
       {
         property: "og:description",
-        content: "Address, phone, WhatsApp, business hours and directions to our Pune studio.",
+        content: "Address, phone, WhatsApp, business hours and directions to our Satna studio.",
       },
     ],
     scripts: [
@@ -40,9 +42,9 @@ export const Route = createFileRoute("/contact")({
           address: {
             "@type": "PostalAddress",
             streetAddress: siteConfig.address.line1,
-            addressLocality: "Pune",
-            addressRegion: "Maharashtra",
-            postalCode: "411005",
+            addressLocality: "Satna",
+            addressRegion: "Madhya Pradesh",
+            postalCode: "485001",
             addressCountry: "IN",
           },
           sameAs: [
@@ -63,6 +65,7 @@ const schema = z.object({
   email: z.string().trim().email("Enter a valid email").max(255),
   subject: z.string().trim().min(3, "Add a subject").max(120),
   message: z.string().trim().min(10, "Tell us a little more").max(1000),
+  acceptedTerms: z.literal("on", { errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }) }),
 });
 
 function ContactPage() {
@@ -180,6 +183,18 @@ function ContactPage() {
             {errors["message"] ? (
               <p className="mt-1 text-xs text-destructive">{errors["message"]}</p>
             ) : null}
+          </div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="flex items-start gap-3">
+              <Checkbox id="acceptedTerms" name="acceptedTerms" aria-invalid={Boolean(errors["acceptedTerms"])} />
+              <Label htmlFor="acceptedTerms" className="text-xs font-normal leading-relaxed text-muted-foreground">
+                I agree to the{" "}
+                <Link to="/terms" className="text-gold hover:underline">Terms of Service</Link>{" "}
+                and acknowledge the{" "}
+                <Link to="/privacy-policy" className="text-gold hover:underline">Privacy Policy</Link>.
+              </Label>
+            </div>
+            {errors["acceptedTerms"] ? <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p> : null}
           </div>
           <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
             {submitting ? "Sending..." : "Send Message"}
