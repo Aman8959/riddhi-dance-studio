@@ -138,7 +138,7 @@ function HomePage() {
 
       <StatsStrip />
 
-      <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="About the studio"
           title="A dance home, not just a class"
@@ -154,7 +154,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later border-t border-border bg-card/30">
+      <section className="home-section-pad render-later border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Classes" title="Popular dance classes" />
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -172,7 +172,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Videos" title="Watch the studio in motion" />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {videos.slice(0, 3).map((video, i) => (
@@ -209,7 +209,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Dance styles" title="Choose your style" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {danceStyles.slice(0, 3).map((s, i) => (
@@ -225,7 +225,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later border-y border-border bg-card/30">
+      <section className="home-section-pad render-later border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Why choose us" title="Built for real progress" align="center" />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -242,7 +242,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Faculty" title="Meet our trainers" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {trainers.map((t, i) => (
@@ -253,7 +253,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later border-t border-border bg-card/30">
+      <section className="home-section-pad render-later border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Timetable" title="Upcoming batches" />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -279,7 +279,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Events" title="Workshops & events" />
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {events.slice(0, 3).map((e, i) => (
@@ -313,7 +313,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad render-later border-y border-border bg-card/30">
+      <section className="home-section-pad render-later border-y border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading eyebrow="Testimonials" title="Loved by our students" align="center" />
           <div className="mt-12">
@@ -327,7 +327,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Membership" title="Plans that fit your week" align="center" />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {plans.map((p, i) => (
@@ -371,7 +371,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section-pad mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+      <section className="home-section-pad mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="FAQ" title="Common questions" align="center" />
         <Accordion type="single" collapsible className="mt-10 w-full">
           {faqs.slice(0, 5).map((f, i) => (

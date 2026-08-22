@@ -217,6 +217,13 @@
   }
 }
 
+@utility home-section-pad {
+  padding-block: 4rem;
+  @media (min-width: 1024px) {
+    padding-block: 7rem;
+  }
+}
+
 @utility render-later {
   content-visibility: auto;
   contain-intrinsic-size: auto 720px;
