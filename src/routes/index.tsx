@@ -97,13 +97,13 @@ function HomePage() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-background via-background/85 to-background/40" />
         <div className="absolute inset-0 -z-10 bg-stage" />
 
-        <div className="mx-auto w-full max-w-7xl px-4 pt-28 pb-20 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl px-7 pt-28 pb-20 sm:px-6 lg:px-8">
           <Badge className="bg-gold text-gold-foreground">
             Now enrolling · Free trial class
           </Badge>
-          <h1 className="mt-4 max-w-3xl text-[clamp(2.5rem,12vw,2.75rem)] font-light uppercase leading-[0.95] tracking-[0.06em] sm:mt-6 sm:text-6xl sm:font-normal sm:leading-[0.98] sm:tracking-wide lg:text-7xl">
-            <span className="block whitespace-nowrap md:inline">Dance in Satna</span>{" "}
-            <span className="block whitespace-nowrap md:inline">for Every Age.</span>
+          <h1 className="mt-4 max-w-full text-[clamp(2.5rem,11vw,3.25rem)] font-light uppercase leading-[0.98] tracking-[0.03em] sm:mt-6 sm:max-w-3xl sm:text-6xl sm:font-normal sm:leading-[0.98] sm:tracking-wide lg:text-7xl">
+            <span className="block md:inline">Dance in Satna</span>{" "}
+            <span className="block md:inline">for Every Age.</span>
           </h1>
           <p className="mt-2 text-sm tracking-[0.08em] text-muted-foreground">
             Kids • Teens • Adults
@@ -125,13 +125,13 @@ function HomePage() {
               <Link to="/trial">Book a Free Trial</Link>
             </Button>
           </div>
-          <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground sm:mt-10">
-            <span className="flex text-gold">
+          <div className="mt-8 flex items-start gap-2 pr-16 text-sm leading-relaxed text-muted-foreground sm:mt-10 sm:pr-0">
+            <span className="flex shrink-0 text-gold">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="size-4 fill-current" />
               ))}
             </span>
-            Rated 5/5 by 120+ students and parents
+            <span className="min-w-0">Rated 5/5 by 120+ students and parents</span>
           </div>
         </div>
       </section>
