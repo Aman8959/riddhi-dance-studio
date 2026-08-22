@@ -101,17 +101,21 @@ function HomePage() {
           <Badge className="bg-gold text-gold-foreground">
             Now enrolling · Free trial class
           </Badge>
-          <h1 className="mt-6 max-w-3xl text-[42px] uppercase leading-[0.98] tracking-[0.01em] sm:text-6xl lg:text-7xl">
-            Dance Classes in Satna for Kids, Teens & Adults
+          <h1 className="mt-4 max-w-3xl text-[clamp(2.5rem,12vw,2.75rem)] font-light uppercase leading-[0.95] tracking-[0.06em] sm:mt-6 sm:text-6xl sm:font-normal sm:leading-[0.98] sm:tracking-wide lg:text-7xl">
+            <span className="block whitespace-nowrap md:inline">Dance in Satna</span>{" "}
+            <span className="block whitespace-nowrap md:inline">for Every Age.</span>
           </h1>
-          <p className="mt-4 font-display text-2xl uppercase tracking-wide text-gradient-brand">
+          <p className="mt-2 text-sm tracking-[0.08em] text-muted-foreground">
+            Kids • Teens • Adults
+          </p>
+          <p className="mt-3 font-display text-2xl uppercase tracking-wide text-gradient-brand sm:mt-4">
             Move. Express. Inspire.
           </p>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
             {siteConfig.shortDescription} Train with working performers, learn a real syllabus and
             perform on a real stage.
           </p>
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div className="mt-7 flex flex-wrap gap-3 sm:mt-9">
             <Button asChild variant="hero" size="xl">
               <Link to="/classes">
                 Join a Dance Class <ArrowRight />
@@ -121,7 +125,7 @@ function HomePage() {
               <Link to="/trial">Book a Free Trial</Link>
             </Button>
           </div>
-          <div className="mt-10 flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground sm:mt-10">
             <span className="flex text-gold">
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star key={i} className="size-4 fill-current" />
