@@ -154,6 +154,43 @@ function HomePage() {
       </section>
 
       <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading eyebrow="Videos" title="Watch the studio in motion" />
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          {videos.slice(0, 3).map((video, i) => (
+            <Reveal key={video.id} delay={i * 70}>
+              <Link to="/videos" className="group block overflow-hidden rounded-2xl glass-panel">
+                <div className="relative aspect-video bg-muted">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    loading="lazy"
+                    decoding="async"
+                    width={1024}
+                    height={768}
+                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <span className="absolute inset-0 grid place-items-center bg-background/35">
+                    <span className="grid size-14 place-items-center rounded-full bg-[image:var(--gradient-brand)] text-primary-foreground shadow-[var(--shadow-glow)]">
+                      <Play className="size-6" />
+                    </span>
+                  </span>
+                </div>
+                <div className="p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-gold">{video.category}</p>
+                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">{video.title}</h3>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-10">
+          <Button asChild variant="glass" size="xl">
+            <Link to="/videos">View All Videos</Link>
+          </Button>
+        </div>
+      </section>
+
+      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading eyebrow="Dance styles" title="Choose your style" />
         <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {danceStyles.map((s, i) => (
@@ -263,43 +300,6 @@ function HomePage() {
               <Link to="/testimonials">Read & Write Reviews</Link>
             </Button>
           </div>
-        </div>
-      </section>
-
-      <section className="section-pad render-later mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading eyebrow="Videos" title="Watch the studio in motion" />
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {videos.slice(0, 3).map((video, i) => (
-            <Reveal key={video.id} delay={i * 70}>
-              <Link to="/videos" className="group block overflow-hidden rounded-2xl glass-panel">
-                <div className="relative aspect-video bg-muted">
-                  <img
-                    src={video.thumbnail}
-                    alt={video.title}
-                    loading="lazy"
-                    decoding="async"
-                    width={1024}
-                    height={768}
-                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <span className="absolute inset-0 grid place-items-center bg-background/35">
-                    <span className="grid size-14 place-items-center rounded-full bg-[image:var(--gradient-brand)] text-primary-foreground shadow-[var(--shadow-glow)]">
-                      <Play className="size-6" />
-                    </span>
-                  </span>
-                </div>
-                <div className="p-5">
-                  <p className="text-xs uppercase tracking-[0.2em] text-gold">{video.category}</p>
-                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">{video.title}</h3>
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-10">
-          <Button asChild variant="glass" size="xl">
-            <Link to="/videos">View All Videos</Link>
-          </Button>
         </div>
       </section>
 
