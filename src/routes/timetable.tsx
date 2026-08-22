@@ -63,6 +63,7 @@ function TimetablePage() {
       <PageHero
         eyebrow="Batches & timetable"
         title="Your week, choreographed"
+        titleClassName="max-sm:max-w-full max-sm:text-[clamp(2.25rem,12vw,3rem)] max-sm:break-words"
         description="Filter the weekly schedule to find a batch that fits your routine. Seats update every term — early bookings get the prime evening slots."
       />
 

@@ -5,11 +5,13 @@ export function PageHero({
   title,
   description,
   children,
+  titleClassName,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
+  titleClassName?: string;
 }) {
   return (
     <header className="bg-stage relative overflow-hidden border-b border-border">
@@ -17,7 +19,9 @@ export function PageHero({
         <p className="animate-rise text-xs font-semibold uppercase tracking-[0.28em] text-gold">
           {eyebrow}
         </p>
-        <h1 className="animate-rise mt-4 max-w-4xl text-5xl uppercase leading-[0.9] tracking-wide sm:text-6xl lg:text-7xl">
+        <h1
+          className={`animate-rise mt-4 max-w-4xl text-5xl uppercase leading-[0.9] tracking-wide sm:text-6xl lg:text-7xl ${titleClassName ?? ""}`}
+        >
           {title}
         </h1>
         <p className="animate-rise mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
