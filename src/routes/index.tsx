@@ -101,7 +101,7 @@ function HomePage() {
           <Badge className="bg-gold text-gold-foreground">
             Now enrolling · Free trial class
           </Badge>
-          <h1 className="mt-6 max-w-3xl text-5xl uppercase leading-[0.88] tracking-wide sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-3xl text-[42px] uppercase leading-[0.98] tracking-[0.01em] sm:text-6xl lg:text-7xl">
             Dance Classes in Satna for Kids, Teens & Adults
           </h1>
           <p className="mt-4 font-display text-2xl uppercase tracking-wide text-gradient-brand">
