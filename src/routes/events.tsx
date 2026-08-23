@@ -9,7 +9,64 @@ import { Button } from "@/components/ui/button";
 import { events } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { whatsappLink } from "@/config/site";
-import { createSeoHead } from "@/config/seo";
+import { createSeoHead, siteUrl } from "@/config/seo";
+
+const indiaOffsetMinutes = 5 * 60 + 30;
+const monthNumbers: Record<string, number> = {
+  January: 0,
+  February: 1,
+  March: 2,
+  April: 3,
+  May: 4,
+  June: 5,
+  July: 6,
+  August: 7,
+  September: 8,
+  October: 9,
+  November: 10,
+  December: 11,
+};
+
+function parseEventStart(event: (typeof events)[number]) {
+  const dateMatch = /^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/.exec(event.date);
+  const timeMatch = /^(\d{1,2}):(\d{2})\s+(AM|PM)$/.exec(event.time);
+  const month = dateMatch ? monthNumbers[dateMatch[2]] : undefined;
+
+  if (!dateMatch || month === undefined || !timeMatch) {
+    throw new Error(`Invalid event date or time: ${event.date} ${event.time}`);
+  }
+
+  const [, dayText, , yearText] = dateMatch;
+  const [, hourText, minuteText, meridiem] = timeMatch;
+  const hour12 = Number(hourText);
+  const minute = Number(minuteText);
+  if (hour12 < 1 || hour12 > 12 || minute > 59) {
+    throw new Error(`Invalid event time: ${event.time}`);
+  }
+
+  const hour24 = (hour12 % 12) + (meridiem === "PM" ? 12 : 0);
+  return new Date(
+    Date.UTC(Number(yearText), month, Number(dayText), hour24, minute) -
+      indiaOffsetMinutes * 60 * 1000,
+  );
+}
+
+function getEventDates(event: (typeof events)[number]) {
+  const startDate = parseEventStart(event);
+  const durationMatch = /^(\d+)\s+(Hours?|Minutes?)$/.exec(event.duration);
+  if (!durationMatch) {
+    throw new Error(`Invalid event duration: ${event.duration}`);
+  }
+
+  const duration = Number(durationMatch[1]) *
+    (durationMatch[2].startsWith("Hour") ? 60 : 1);
+  const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
+  if (endDate <= startDate) {
+    throw new Error(`Event end must be later than start: ${event.name}`);
+  }
+
+  return { startDate: startDate.toISOString(), endDate: endDate.toISOString() };
+}
 
 export const Route = createFileRoute("/events")({
   head: () => ({
@@ -28,7 +85,12 @@ export const Route = createFileRoute("/events")({
             "@type": "Event",
             name: event.name,
             description: event.description,
-            startDate: new Date(`${event.date} ${event.time}`).toISOString(),
+            image: new URL(event.image, siteUrl).href,
+            performer: {
+              "@type": event.instructor === "All Faculty" ? "PerformingGroup" : "Person",
+              name: event.instructor,
+            },
+            ...getEventDates(event),
             eventStatus: "https://schema.org/EventScheduled",
             eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
             location: {
