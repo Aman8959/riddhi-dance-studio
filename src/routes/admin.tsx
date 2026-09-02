@@ -5,110 +5,862 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { addMedia, adminLogin, deleteContent, deleteMedia, getContent, getMedia, getSubmissions, saveContent, type ManagedContent, type ManagedContentType, type MediaInput, type MediaItem, type Submission, updateSubmissionStatus } from "@/lib/submissions";
+import {
+  addMedia,
+  adminLogin,
+  deleteContent,
+  deleteMedia,
+  getContent,
+  getMedia,
+  getSubmissions,
+  saveContent,
+  type ManagedContent,
+  type ManagedContentType,
+  type MediaInput,
+  type MediaItem,
+  type Submission,
+  updateSubmissionStatus,
+} from "@/lib/submissions";
 import { batches, danceClasses, events, plans } from "@/data/studio";
 
-export const Route = createFileRoute("/admin")({ head: () => ({ meta: [{ title: "Admin Dashboard — Riddhi Dance Studio" }, { name: "robots", content: "noindex, nofollow" }] }), component: AdminPage });
+export const Route = createFileRoute("/admin")({
+  head: () => ({
+    meta: [
+      { title: "Admin Dashboard — Riddhi Dance Studio" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+  component: AdminPage,
+});
 const tokenKey = "riddhi-admin-token";
 
 function AdminPage() {
   const [token, setToken] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [media, setMedia] = useState<MediaItem[]>([]);
-  const [content, setContent] = useState<Record<ManagedContentType, ManagedContent[]>>({ classes: [], plans: [], events: [], batches: [] });
+  const [content, setContent] = useState<Record<ManagedContentType, ManagedContent[]>>({
+    classes: [],
+    plans: [],
+    events: [],
+    batches: [],
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(tokenKey);
-    if (saved) { setToken(saved); void load(saved); }
+    if (saved) {
+      setToken(saved);
+      void load(saved);
+    }
   }, []);
 
   async function load(activeToken: string) {
     setLoading(true);
     try {
-      const defaults: Record<ManagedContentType, ManagedContent[]> = { classes: danceClasses as ManagedContent[], plans: plans as ManagedContent[], events: events as ManagedContent[], batches: batches as ManagedContent[] };
-      const [submissionsResult, mediaResult] = await Promise.allSettled([getSubmissions(activeToken), getMedia(activeToken)]);
-      const nextSubmissions = submissionsResult.status === "fulfilled" ? submissionsResult.value : [];
+      const defaults: Record<ManagedContentType, ManagedContent[]> = {
+        classes: danceClasses as ManagedContent[],
+        plans: plans as ManagedContent[],
+        events: events as ManagedContent[],
+        batches: batches as ManagedContent[],
+      };
+      const [submissionsResult, mediaResult] = await Promise.allSettled([
+        getSubmissions(activeToken),
+        getMedia(activeToken),
+      ]);
+      const nextSubmissions =
+        submissionsResult.status === "fulfilled" ? submissionsResult.value : [];
       const nextMedia = mediaResult.status === "fulfilled" ? mediaResult.value : [];
-      if (submissionsResult.status === "rejected") toast.error(`Submissions: ${getErrorMessage(submissionsResult.reason)}`);
-      if (mediaResult.status === "rejected") toast.error(`Media: ${getErrorMessage(mediaResult.reason)}`);
+      if (submissionsResult.status === "rejected")
+        toast.error(`Submissions: ${getErrorMessage(submissionsResult.reason)}`);
+      if (mediaResult.status === "rejected")
+        toast.error(`Media: ${getErrorMessage(mediaResult.reason)}`);
       const keys = Object.keys(defaults) as ManagedContentType[];
-      const contentResults = await Promise.all(keys.map(async (key) => {
-        try { return [key, await getContent(key)] as const; } catch { return [key, defaults[key]] as const; }
-      }));
-      const current = Object.fromEntries(contentResults) as Record<ManagedContentType, ManagedContent[]>;
-      setSubmissions(nextSubmissions); setMedia(nextMedia); setContent(current);
-      void Promise.all(keys.filter((key) => !current[key].length).map(async (key) => {
-        try {
-          const seeded = await Promise.all(defaults[key].map((item) => saveContent(activeToken, key, item)));
-          setContent((previous) => ({ ...previous, [key]: seeded }));
-        } catch { /* The fallback remains usable until the backend is deployed. */ }
-      }));
+      const contentResults = await Promise.all(
+        keys.map(async (key) => {
+          try {
+            return [key, await getContent(key)] as const;
+          } catch {
+            return [key, defaults[key]] as const;
+          }
+        }),
+      );
+      const current = Object.fromEntries(contentResults) as Record<
+        ManagedContentType,
+        ManagedContent[]
+      >;
+      setSubmissions(nextSubmissions);
+      setMedia(nextMedia);
+      setContent(current);
+      void Promise.all(
+        keys
+          .filter((key) => !current[key].length)
+          .map(async (key) => {
+            try {
+              const seeded = await Promise.all(
+                defaults[key].map((item) => saveContent(activeToken, key, item)),
+              );
+              setContent((previous) => ({ ...previous, [key]: seeded }));
+            } catch {
+              /* The fallback remains usable until the backend is deployed. */
+            }
+          }),
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not load dashboard.");
+    } finally {
+      setLoading(false);
     }
-    catch (error) { toast.error(error instanceof Error ? error.message : "Could not load dashboard."); }
-    finally { setLoading(false); }
   }
 
   async function login(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setLoading(true);
-    try { const result = await adminLogin(email.trim(), password); window.localStorage.setItem(tokenKey, result.token); setToken(result.token); setPassword(""); await load(result.token); }
-    catch (error) { toast.error(error instanceof Error ? error.message : "Login failed."); }
-    finally { setLoading(false); }
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const result = await adminLogin(email.trim(), password);
+      window.localStorage.setItem(tokenKey, result.token);
+      setToken(result.token);
+      setPassword("");
+      await load(result.token);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Login failed.");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  if (!token) return <section className="section-pad mx-auto flex min-h-[70vh] max-w-md items-center px-4"><form onSubmit={login} className="glass-panel grid w-full gap-5 rounded-3xl p-8"><ShieldCheck className="size-8 text-primary" /><h1 className="font-display text-4xl uppercase">Admin login</h1><div><Label htmlFor="admin-email">Email</Label><Input id="admin-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></div><div><Label htmlFor="admin-password">Password</Label><Input id="admin-password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} required /></div><Button type="submit" variant="hero" disabled={loading}>{loading ? "Signing in..." : "Sign in"}</Button></form></section>;
-  return <Dashboard token={token} submissions={submissions} media={media} content={content} loading={loading} onRefresh={() => void load(token)} onLogout={() => { window.localStorage.removeItem(tokenKey); setToken(null); }} onSubmissionsChange={setSubmissions} onMediaChange={setMedia} onContentChange={setContent} />;
+  if (!token)
+    return (
+      <section className="section-pad mx-auto flex min-h-[70vh] max-w-md items-center px-4">
+        <form onSubmit={login} className="glass-panel grid w-full gap-5 rounded-3xl p-8">
+          <ShieldCheck className="size-8 text-primary" />
+          <h1 className="font-display text-4xl uppercase">Admin login</h1>
+          <div>
+            <Label htmlFor="admin-email">Email</Label>
+            <Input
+              id="admin-email"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="admin-password">Password</Label>
+            <Input
+              id="admin-password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit" variant="hero" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
+          </Button>
+        </form>
+      </section>
+    );
+  return (
+    <Dashboard
+      token={token}
+      submissions={submissions}
+      media={media}
+      content={content}
+      loading={loading}
+      onRefresh={() => void load(token)}
+      onLogout={() => {
+        window.localStorage.removeItem(tokenKey);
+        setToken(null);
+      }}
+      onSubmissionsChange={setSubmissions}
+      onMediaChange={setMedia}
+      onContentChange={setContent}
+    />
+  );
 }
 
-function getErrorMessage(error: unknown) { return error instanceof Error ? error.message : String(error || "Unknown Apps Script error"); }
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error || "Unknown Apps Script error");
+}
 
-function Dashboard({ token, submissions, media, content, loading, onRefresh, onLogout, onSubmissionsChange, onMediaChange, onContentChange }: { token: string; submissions: Submission[]; media: MediaItem[]; content: Record<ManagedContentType, ManagedContent[]>; loading: boolean; onRefresh: () => void; onLogout: () => void; onSubmissionsChange: (items: Submission[]) => void; onMediaChange: (items: MediaItem[]) => void; onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void }) {
+function Dashboard({
+  token,
+  submissions,
+  media,
+  content,
+  loading,
+  onRefresh,
+  onLogout,
+  onSubmissionsChange,
+  onMediaChange,
+  onContentChange,
+}: {
+  token: string;
+  submissions: Submission[];
+  media: MediaItem[];
+  content: Record<ManagedContentType, ManagedContent[]>;
+  loading: boolean;
+  onRefresh: () => void;
+  onLogout: () => void;
+  onSubmissionsChange: (items: Submission[]) => void;
+  onMediaChange: (items: MediaItem[]) => void;
+  onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void;
+}) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
-  const filtered = useMemo(() => submissions.filter((item) => (filter === "all" || item.type === filter) && (!query || JSON.stringify(item.data).toLowerCase().includes(query.toLowerCase()))), [filter, query, submissions]);
-  async function status(id: string, value: Submission["status"]) { try { await updateSubmissionStatus(token, id, value); onSubmissionsChange(submissions.map((item) => item.id === id ? { ...item, status: value } : item)); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not update status."); } }
-  return <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs uppercase tracking-[0.2em] text-gold">Studio operations</p><h1 className="mt-2 font-display text-5xl uppercase">Admin dashboard</h1></div><div className="flex gap-2"><Button variant="glass" onClick={onRefresh} disabled={loading}><RefreshCw className="size-4" /> Refresh</Button><Button variant="glass" onClick={onLogout}><LogOut className="size-4" /> Log out</Button></div></div><ContentManager token={token} content={content} onContentChange={onContentChange} /><MediaManager token={token} media={media} onMediaChange={onMediaChange} /><div className="mt-8 flex gap-3"><Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search requests" className="max-w-sm" /><select value={filter} onChange={(event) => setFilter(event.target.value)} className="rounded-md border border-input bg-card px-3"><option value="all">All</option><option value="registration">Registrations</option><option value="trial">Trials</option><option value="contact">Messages</option><option value="review">Reviews</option></select></div><div className="mt-5 overflow-x-auto rounded-2xl border border-border"><table className="w-full min-w-[700px] text-left text-sm"><thead><tr><th className="p-4">Request</th><th className="p-4">Details</th><th className="p-4">Received</th><th className="p-4">Status</th></tr></thead><tbody>{filtered.map((item) => <tr key={item.id} className="border-t border-border"><td className="p-4 capitalize">{item.type}</td><td className="p-4">{Object.entries(item.data).slice(0, 4).map(([key, value]) => <div key={key}><span className="text-muted-foreground">{key}: </span>{String(value)}</div>)}</td><td className="p-4">{new Date(item.createdAt).toLocaleString()}</td><td className="p-4"><select value={item.status} onChange={(event) => void status(item.id, event.target.value as Submission["status"])} className="rounded-md border border-input bg-card px-2 py-1"><option>new</option><option>contacted</option><option>confirmed</option><option>rejected</option></select></td></tr>)}</tbody></table></div></section>;
+  const filtered = useMemo(
+    () =>
+      submissions.filter(
+        (item) =>
+          (filter === "all" || item.type === filter) &&
+          (!query || JSON.stringify(item.data).toLowerCase().includes(query.toLowerCase())),
+      ),
+    [filter, query, submissions],
+  );
+  async function status(id: string, value: Submission["status"]) {
+    try {
+      await updateSubmissionStatus(token, id, value);
+      onSubmissionsChange(
+        submissions.map((item) => (item.id === id ? { ...item, status: value } : item)),
+      );
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not update status.");
+    }
+  }
+  return (
+    <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold">Studio operations</p>
+          <h1 className="mt-2 font-display text-5xl uppercase">Admin dashboard</h1>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="glass" onClick={onRefresh} disabled={loading}>
+            <RefreshCw className="size-4" /> Refresh
+          </Button>
+          <Button variant="glass" onClick={onLogout}>
+            <LogOut className="size-4" /> Log out
+          </Button>
+        </div>
+      </div>
+      <ContentManager token={token} content={content} onContentChange={onContentChange} />
+      <MediaManager token={token} media={media} onMediaChange={onMediaChange} />
+      <div className="mt-8 flex gap-3">
+        <Input
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Search requests"
+          className="max-w-sm"
+        />
+        <select
+          value={filter}
+          onChange={(event) => setFilter(event.target.value)}
+          className="rounded-md border border-input bg-card px-3"
+        >
+          <option value="all">All</option>
+          <option value="registration">Registrations</option>
+          <option value="trial">Trials</option>
+          <option value="contact">Messages</option>
+          <option value="review">Reviews</option>
+        </select>
+      </div>
+      <div className="mt-5 overflow-x-auto rounded-2xl border border-border">
+        <table className="w-full min-w-[700px] text-left text-sm">
+          <thead>
+            <tr>
+              <th className="p-4">Request</th>
+              <th className="p-4">Details</th>
+              <th className="p-4">Received</th>
+              <th className="p-4">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((item) => (
+              <tr key={item.id} className="border-t border-border">
+                <td className="p-4 capitalize">{item.type}</td>
+                <td className="p-4">
+                  {Object.entries(item.data)
+                    .slice(0, 4)
+                    .map(([key, value]) => (
+                      <div key={key}>
+                        <span className="text-muted-foreground">{key}: </span>
+                        {String(value)}
+                      </div>
+                    ))}
+                </td>
+                <td className="p-4">{new Date(item.createdAt).toLocaleString()}</td>
+                <td className="p-4">
+                  <select
+                    value={item.status}
+                    onChange={(event) =>
+                      void status(item.id, event.target.value as Submission["status"])
+                    }
+                    className="rounded-md border border-input bg-card px-2 py-1"
+                  >
+                    <option>new</option>
+                    <option>contacted</option>
+                    <option>confirmed</option>
+                    <option>rejected</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
 }
 
-const contentLabels: Record<ManagedContentType, string> = { classes: "Classes & fees", plans: "Membership pricing", events: "Events & workshops", batches: "Timetable" };
-const contentHints: Record<ManagedContentType, string> = { classes: "name, style, ageGroup, level, duration, timing, trainer, description, price, image", plans: "name, price, period, highlight, features (array)", events: "name, date, time, duration, location, instructor, description, image, status", batches: "day, time, className, style, ageGroup, trainer, level, seatsLeft" };
+const contentLabels: Record<ManagedContentType, string> = {
+  classes: "Classes & fees",
+  plans: "Membership pricing",
+  events: "Events & workshops",
+  batches: "Timetable",
+};
+const contentHints: Record<ManagedContentType, string> = {
+  classes: "name, style, ageGroup, level, duration, timing, trainer, description, price, image",
+  plans: "name, price, period, highlight, features (array)",
+  events: "name, date, time, duration, location, instructor, description, image, status",
+  batches: "day, time, className, style, ageGroup, trainer, level, seatsLeft",
+};
 
-function ContentManager({ token, content, onContentChange }: { token: string; content: Record<ManagedContentType, ManagedContent[]>; onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void }) {
+function ContentManager({
+  token,
+  content,
+  onContentChange,
+}: {
+  token: string;
+  content: Record<ManagedContentType, ManagedContent[]>;
+  onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void;
+}) {
   const [type, setType] = useState<ManagedContentType>("classes");
   const [editing, setEditing] = useState<ManagedContent | null>(null);
   const [values, setValues] = useState<Record<string, string>>({});
   const [image, setImage] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const fields: Record<ManagedContentType, { key: string; label: string; type?: string }[]> = {
-    classes: [{ key: "name", label: "Class name" }, { key: "style", label: "Dance style" }, { key: "ageGroup", label: "Age group" }, { key: "level", label: "Level" }, { key: "duration", label: "Duration" }, { key: "timing", label: "Timing" }, { key: "trainer", label: "Trainer" }, { key: "price", label: "Monthly fee", type: "number" }, { key: "description", label: "Description", type: "textarea" }],
-    plans: [{ key: "name", label: "Plan name" }, { key: "price", label: "Price", type: "number" }, { key: "period", label: "Period" }, { key: "features", label: "Features (one per line)", type: "textarea" }],
-    events: [{ key: "name", label: "Event name" }, { key: "date", label: "Date" }, { key: "time", label: "Time" }, { key: "duration", label: "Duration" }, { key: "location", label: "Location" }, { key: "instructor", label: "Instructor" }, { key: "status", label: "Status" }, { key: "description", label: "Description", type: "textarea" }],
-    batches: [{ key: "day", label: "Day" }, { key: "time", label: "Time" }, { key: "className", label: "Class name" }, { key: "style", label: "Dance style" }, { key: "ageGroup", label: "Age group" }, { key: "trainer", label: "Trainer" }, { key: "level", label: "Level" }, { key: "seatsLeft", label: "Seats available", type: "number" }],
+    classes: [
+      { key: "name", label: "Class name" },
+      { key: "style", label: "Dance style" },
+      { key: "ageGroup", label: "Age group" },
+      { key: "level", label: "Level" },
+      { key: "duration", label: "Duration" },
+      { key: "timing", label: "Timing" },
+      { key: "trainer", label: "Trainer" },
+      { key: "price", label: "Monthly fee", type: "number" },
+      { key: "description", label: "Description", type: "textarea" },
+    ],
+    plans: [
+      { key: "name", label: "Plan name" },
+      { key: "price", label: "Price", type: "number" },
+      { key: "period", label: "Period" },
+      { key: "features", label: "Features (one per line)", type: "textarea" },
+    ],
+    events: [
+      { key: "name", label: "Event name" },
+      { key: "date", label: "Date" },
+      { key: "time", label: "Time" },
+      { key: "duration", label: "Duration" },
+      { key: "location", label: "Location" },
+      { key: "instructor", label: "Instructor" },
+      { key: "status", label: "Status" },
+      { key: "description", label: "Description", type: "textarea" },
+    ],
+    batches: [
+      { key: "day", label: "Day" },
+      { key: "time", label: "Time" },
+      { key: "className", label: "Class name" },
+      { key: "style", label: "Dance style" },
+      { key: "ageGroup", label: "Age group" },
+      { key: "trainer", label: "Trainer" },
+      { key: "level", label: "Level" },
+      { key: "seatsLeft", label: "Seats available", type: "number" },
+    ],
   };
-  function open(item?: ManagedContent) { const next = item ?? { id: "" }; const nextValues: Record<string, string> = {}; for (const field of fields[type]) nextValues[field.key] = Array.isArray(next[field.key]) ? (next[field.key] as unknown[]).join("\n") : String(next[field.key] ?? ""); setEditing(next); setValues(nextValues); setImage(null); }
-  async function filePayload(file: File) { if (file.size > 8 * 1024 * 1024) throw new Error("Image must be 8 MB or smaller."); return new Promise<{ name: string; mimeType: string; base64: string }>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ name: file.name, mimeType: file.type, base64: String(reader.result).split(",")[1] ?? "" }); reader.onerror = () => reject(new Error("Could not read image.")); reader.readAsDataURL(file); }); }
-  async function save(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); setSaving(true); try { const item: Record<string, unknown> & { id?: string; file?: { name: string; mimeType: string; base64: string } } = { ...(editing ?? {}) }; for (const field of fields[type]) item[field.key] = field.key === "price" || field.key === "seatsLeft" ? Number(values[field.key] || 0) : field.key === "features" ? (values[field.key] ?? "").split("\n").map((entry) => entry.trim()).filter(Boolean) : (values[field.key] ?? "").trim(); if (image) item.file = await filePayload(image); const saved = await saveContent(token, type, item); onContentChange({ ...content, [type]: [saved, ...content[type].filter((entry) => entry.id !== saved.id)] }); setEditing(null); toast.success(`${contentLabels[type]} saved.`); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not save content."); } finally { setSaving(false); } }
-  async function remove(item: ManagedContent) { if (!window.confirm(`Delete ${String(item["name"] ?? item["className"] ?? item.id)}?`)) return; try { await deleteContent(token, type, item.id); onContentChange({ ...content, [type]: content[type].filter((entry) => entry.id !== item.id) }); toast.success("Content deleted."); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not delete content."); } }
-  return <section className="mt-10 border-y border-border py-8"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-[0.2em] text-gold">Website content</p><h2 className="font-display text-3xl uppercase">Manage everything</h2><p className="text-sm text-muted-foreground">Use the simple forms below to update your website.</p></div><Button variant="hero" onClick={() => open()}><Plus className="size-4" /> Add {contentLabels[type]}</Button></div><div className="mt-6 flex flex-wrap gap-2">{(Object.keys(contentLabels) as ManagedContentType[]).map((key) => <Button key={key} size="sm" variant={type === key ? "hero" : "glass"} onClick={() => { setType(key); setEditing(null); }}>{contentLabels[key]}</Button>)}</div><div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{content[type].map((item) => <article key={item.id} className="rounded-2xl border border-border bg-card p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold">{String(item.name ?? item.className ?? item.id)}</p><p className="mt-1 text-xs text-muted-foreground">{String(item.price ?? item.date ?? item.day ?? "")}</p></div><div className="flex"><Button size="icon" variant="ghost" aria-label="Edit" onClick={() => open(item)}><Pencil className="size-4" /></Button><Button size="icon" variant="ghost" aria-label="Delete" onClick={() => void remove(item)}><Trash2 className="size-4" /></Button></div></div></article>)}</div>{editing ? <form onSubmit={save} className="mt-6 grid gap-4 rounded-2xl border border-primary/40 bg-card p-5 sm:grid-cols-2">{fields[type].map((field) => <div key={field.key} className={field.type === "textarea" ? "sm:col-span-2" : ""}><Label htmlFor={`content-${field.key}`}>{field.label}</Label>{field.type === "textarea" ? <textarea id={`content-${field.key}`} value={values[field.key] ?? ""} onChange={(event) => setValues({ ...values, [field.key]: event.target.value })} className="mt-2 min-h-24 w-full rounded-md border border-input bg-background p-3 text-sm" required={field.key !== "description"} /> : <Input id={`content-${field.key}`} type={field.type ?? "text"} value={values[field.key] ?? ""} onChange={(event) => setValues({ ...values, [field.key]: event.target.value })} className="mt-2" required />}</div>)}{type === "classes" || type === "events" ? <div className="sm:col-span-2"><Label htmlFor="content-image">Image</Label><Input id="content-image" type="file" accept="image/*" onChange={(event) => setImage(event.target.files?.[0] ?? null)} className="mt-2" /><p className="mt-1 text-xs text-muted-foreground">Optional while editing. Upload a new image to replace the current one.</p></div> : null}<div className="flex gap-2 sm:col-span-2"><Button type="submit" variant="hero" disabled={saving}>{saving ? "Saving..." : "Save changes"}</Button><Button type="button" variant="glass" onClick={() => setEditing(null)}>Cancel</Button></div></form> : null}</section>;
+  function open(item?: ManagedContent) {
+    const next = item ?? { id: "" };
+    const nextValues: Record<string, string> = {};
+    for (const field of fields[type])
+      nextValues[field.key] = Array.isArray(next[field.key])
+        ? (next[field.key] as unknown[]).join("\n")
+        : String(next[field.key] ?? "");
+    setEditing(next);
+    setValues(nextValues);
+    setImage(null);
+  }
+  async function filePayload(file: File) {
+    if (file.size > 8 * 1024 * 1024) throw new Error("Image must be 8 MB or smaller.");
+    return new Promise<{ name: string; mimeType: string; base64: string }>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () =>
+        resolve({
+          name: file.name,
+          mimeType: file.type,
+          base64: String(reader.result).split(",")[1] ?? "",
+        });
+      reader.onerror = () => reject(new Error("Could not read image."));
+      reader.readAsDataURL(file);
+    });
+  }
+  async function save(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      const item: Record<string, unknown> & {
+        id?: string;
+        file?: { name: string; mimeType: string; base64: string };
+      } = { ...(editing ?? {}) };
+      for (const field of fields[type])
+        item[field.key] =
+          field.key === "price" || field.key === "seatsLeft"
+            ? Number(values[field.key] || 0)
+            : field.key === "features"
+              ? (values[field.key] ?? "")
+                  .split("\n")
+                  .map((entry) => entry.trim())
+                  .filter(Boolean)
+              : (values[field.key] ?? "").trim();
+      if (image) item.file = await filePayload(image);
+      const saved = await saveContent(token, type, item);
+      onContentChange({
+        ...content,
+        [type]: [saved, ...content[type].filter((entry) => entry.id !== saved.id)],
+      });
+      setEditing(null);
+      toast.success(`${contentLabels[type]} saved.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not save content.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  async function remove(item: ManagedContent) {
+    if (!window.confirm(`Delete ${String(item["name"] ?? item["className"] ?? item.id)}?`)) return;
+    try {
+      await deleteContent(token, type, item.id);
+      onContentChange({
+        ...content,
+        [type]: content[type].filter((entry) => entry.id !== item.id),
+      });
+      toast.success("Content deleted.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not delete content.");
+    }
+  }
+  return (
+    <section className="mt-10 border-y border-border py-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold">Website content</p>
+          <h2 className="font-display text-3xl uppercase">Manage everything</h2>
+          <p className="text-sm text-muted-foreground">
+            Use the simple forms below to update your website.
+          </p>
+        </div>
+        <Button variant="hero" onClick={() => open()}>
+          <Plus className="size-4" /> Add {contentLabels[type]}
+        </Button>
+      </div>
+      <div className="mt-6 flex flex-wrap gap-2">
+        {(Object.keys(contentLabels) as ManagedContentType[]).map((key) => (
+          <Button
+            key={key}
+            size="sm"
+            variant={type === key ? "hero" : "glass"}
+            onClick={() => {
+              setType(key);
+              setEditing(null);
+            }}
+          >
+            {contentLabels[key]}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {content[type].map((item) => (
+          <article key={item.id} className="rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-semibold">{String(item.name ?? item.className ?? item.id)}</p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {String(item.price ?? item.date ?? item.day ?? "")}
+                </p>
+              </div>
+              <div className="flex">
+                <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => open(item)}>
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Delete"
+                  onClick={() => void remove(item)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      {editing ? (
+        <form
+          onSubmit={save}
+          className="mt-6 grid gap-4 rounded-2xl border border-primary/40 bg-card p-5 sm:grid-cols-2"
+        >
+          {fields[type].map((field) => (
+            <div key={field.key} className={field.type === "textarea" ? "sm:col-span-2" : ""}>
+              <Label htmlFor={`content-${field.key}`}>{field.label}</Label>
+              {field.type === "textarea" ? (
+                <textarea
+                  id={`content-${field.key}`}
+                  value={values[field.key] ?? ""}
+                  onChange={(event) => setValues({ ...values, [field.key]: event.target.value })}
+                  className="mt-2 min-h-24 w-full rounded-md border border-input bg-background p-3 text-sm"
+                  required={field.key !== "description"}
+                />
+              ) : (
+                <Input
+                  id={`content-${field.key}`}
+                  type={field.type ?? "text"}
+                  value={values[field.key] ?? ""}
+                  onChange={(event) => setValues({ ...values, [field.key]: event.target.value })}
+                  className="mt-2"
+                  required
+                />
+              )}
+            </div>
+          ))}
+          {type === "classes" || type === "events" ? (
+            <div className="sm:col-span-2">
+              <Label htmlFor="content-image">Image</Label>
+              <Input
+                id="content-image"
+                type="file"
+                accept="image/*"
+                onChange={(event) => setImage(event.target.files?.[0] ?? null)}
+                className="mt-2"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                Optional while editing. Upload a new image to replace the current one.
+              </p>
+            </div>
+          ) : null}
+          <div className="flex gap-2 sm:col-span-2">
+            <Button type="submit" variant="hero" disabled={saving}>
+              {saving ? "Saving..." : "Save changes"}
+            </Button>
+            <Button type="button" variant="glass" onClick={() => setEditing(null)}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      ) : null}
+    </section>
+  );
 }
 
-function JsonContentManager({ token, content, onContentChange }: { token: string; content: Record<ManagedContentType, ManagedContent[]>; onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void }) {
+function JsonContentManager({
+  token,
+  content,
+  onContentChange,
+}: {
+  token: string;
+  content: Record<ManagedContentType, ManagedContent[]>;
+  onContentChange: (items: Record<ManagedContentType, ManagedContent[]>) => void;
+}) {
   const [type, setType] = useState<ManagedContentType>("classes");
   const [editing, setEditing] = useState<ManagedContent | null>(null);
   const [value, setValue] = useState("");
   const [saving, setSaving] = useState(false);
-  function open(item?: ManagedContent) { const next = item ?? { id: "", name: "New item" }; setEditing(item ?? next); setValue(JSON.stringify(next, null, 2)); }
-  async function save(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); setSaving(true); try { const item = JSON.parse(value) as Record<string, unknown> & { id?: string }; const saved = await saveContent(token, type, item); onContentChange({ ...content, [type]: [saved, ...content[type].filter((entry) => entry.id !== saved.id)] }); setEditing(null); toast.success(`${contentLabels[type]} updated.`); } catch (error) { toast.error(error instanceof Error ? error.message : "Invalid content JSON."); } finally { setSaving(false); } }
-  async function remove(item: ManagedContent) { if (!window.confirm(`Delete ${String(item.name ?? item.id)}?`)) return; try { await deleteContent(token, type, item.id); onContentChange({ ...content, [type]: content[type].filter((entry) => entry.id !== item.id) }); toast.success("Content deleted."); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not delete content."); } }
-  return <section className="mt-10 border-y border-border py-8"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-[0.2em] text-gold">Website content</p><h2 className="font-display text-3xl uppercase">Manage everything</h2><p className="text-sm text-muted-foreground">Edit any field as JSON. Required fields: {contentHints[type]}.</p></div><Button variant="hero" onClick={() => open()}><Plus className="size-4" /> Add {contentLabels[type]}</Button></div><div className="mt-6 flex flex-wrap gap-2">{(Object.keys(contentLabels) as ManagedContentType[]).map((key) => <Button key={key} size="sm" variant={type === key ? "hero" : "glass"} onClick={() => { setType(key); setEditing(null); }}>{contentLabels[key]}</Button>)}</div><div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{content[type].map((item) => <article key={item.id} className="rounded-2xl border border-border bg-card p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold">{String(item.name ?? item.className ?? item.title ?? item.id)}</p><p className="mt-1 text-xs text-muted-foreground">{Object.entries(item).filter(([key]) => key !== "id").slice(0, 2).map(([key, entry]) => `${key}: ${String(entry)}`).join(" · ")}</p></div><div className="flex"><Button size="icon" variant="ghost" aria-label="Edit" onClick={() => open(item)}><Pencil className="size-4" /></Button><Button size="icon" variant="ghost" aria-label="Delete" onClick={() => void remove(item)}><Trash2 className="size-4" /></Button></div></div></article>)}</div>{editing ? <form onSubmit={save} className="mt-6 grid gap-4 rounded-2xl border border-primary/40 bg-card p-5"><Label htmlFor="content-json">{contentLabels[type]} record</Label><textarea id="content-json" value={value} onChange={(event) => setValue(event.target.value)} className="min-h-64 rounded-md border border-input bg-background p-3 font-mono text-sm" spellCheck={false} /><div className="flex gap-2"><Button type="submit" variant="hero" disabled={saving}>{saving ? "Saving..." : "Save changes"}</Button><Button type="button" variant="glass" onClick={() => setEditing(null)}>Cancel</Button></div></form> : null}</section>;
+  function open(item?: ManagedContent) {
+    const next = item ?? { id: "", name: "New item" };
+    setEditing(item ?? next);
+    setValue(JSON.stringify(next, null, 2));
+  }
+  async function save(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      const item = JSON.parse(value) as Record<string, unknown> & { id?: string };
+      const saved = await saveContent(token, type, item);
+      onContentChange({
+        ...content,
+        [type]: [saved, ...content[type].filter((entry) => entry.id !== saved.id)],
+      });
+      setEditing(null);
+      toast.success(`${contentLabels[type]} updated.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Invalid content JSON.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  async function remove(item: ManagedContent) {
+    if (!window.confirm(`Delete ${String(item.name ?? item.id)}?`)) return;
+    try {
+      await deleteContent(token, type, item.id);
+      onContentChange({
+        ...content,
+        [type]: content[type].filter((entry) => entry.id !== item.id),
+      });
+      toast.success("Content deleted.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not delete content.");
+    }
+  }
+  return (
+    <section className="mt-10 border-y border-border py-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-gold">Website content</p>
+          <h2 className="font-display text-3xl uppercase">Manage everything</h2>
+          <p className="text-sm text-muted-foreground">
+            Edit any field as JSON. Required fields: {contentHints[type]}.
+          </p>
+        </div>
+        <Button variant="hero" onClick={() => open()}>
+          <Plus className="size-4" /> Add {contentLabels[type]}
+        </Button>
+      </div>
+      <div className="mt-6 flex flex-wrap gap-2">
+        {(Object.keys(contentLabels) as ManagedContentType[]).map((key) => (
+          <Button
+            key={key}
+            size="sm"
+            variant={type === key ? "hero" : "glass"}
+            onClick={() => {
+              setType(key);
+              setEditing(null);
+            }}
+          >
+            {contentLabels[key]}
+          </Button>
+        ))}
+      </div>
+      <div className="mt-5 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {content[type].map((item) => (
+          <article key={item.id} className="rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-semibold">
+                  {String(item.name ?? item.className ?? item.title ?? item.id)}
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {Object.entries(item)
+                    .filter(([key]) => key !== "id")
+                    .slice(0, 2)
+                    .map(([key, entry]) => `${key}: ${String(entry)}`)
+                    .join(" · ")}
+                </p>
+              </div>
+              <div className="flex">
+                <Button size="icon" variant="ghost" aria-label="Edit" onClick={() => open(item)}>
+                  <Pencil className="size-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Delete"
+                  onClick={() => void remove(item)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+      {editing ? (
+        <form
+          onSubmit={save}
+          className="mt-6 grid gap-4 rounded-2xl border border-primary/40 bg-card p-5"
+        >
+          <Label htmlFor="content-json">{contentLabels[type]} record</Label>
+          <textarea
+            id="content-json"
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            className="min-h-64 rounded-md border border-input bg-background p-3 font-mono text-sm"
+            spellCheck={false}
+          />
+          <div className="flex gap-2">
+            <Button type="submit" variant="hero" disabled={saving}>
+              {saving ? "Saving..." : "Save changes"}
+            </Button>
+            <Button type="button" variant="glass" onClick={() => setEditing(null)}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      ) : null}
+    </section>
+  );
 }
 
-function MediaManager({ token, media, onMediaChange }: { token: string; media: MediaItem[]; onMediaChange: (items: MediaItem[]) => void }) {
-  const [kind, setKind] = useState<MediaInput["kind"]>("image"); const [title, setTitle] = useState(""); const [category, setCategory] = useState("Classes"); const [youtubeId, setYoutubeId] = useState(""); const [file, setFile] = useState<File | null>(null); const [thumbnail, setThumbnail] = useState<File | null>(null); const [saving, setSaving] = useState(false);
-  async function payload(value: File | null) { if (!value) return undefined; if (value.size > 8 * 1024 * 1024) throw new Error("Files must be 8 MB or smaller."); return new Promise<{ name: string; mimeType: string; base64: string }>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve({ name: value.name, mimeType: value.type, base64: String(reader.result).split(",")[1] ?? "" }); reader.onerror = () => reject(new Error("Could not read file.")); reader.readAsDataURL(value); }); }
-  async function publish(event: React.FormEvent<HTMLFormElement>) { event.preventDefault(); setSaving(true); try { const input: MediaInput = { kind, title, category }; if (kind === "video") { if (youtubeId.trim()) input.youtubeId = youtubeId; const fileData = await payload(file); if (fileData) input.file = fileData; const thumb = await payload(thumbnail); if (thumb) input.thumbnail = thumb; if (!input.youtubeId && !input.file) throw new Error("Enter a YouTube link or select a video file."); } else { const fileData = await payload(file); if (fileData) input.file = fileData; } const item = await addMedia(token, input); onMediaChange([item, ...media]); setTitle(""); setYoutubeId(""); event.currentTarget.reset(); toast.success("Media published."); } catch (error) { toast.error(error instanceof Error ? error.message : "Could not publish media."); } finally { setSaving(false); } }
-  async function remove(item: MediaItem) { if (!window.confirm(`Delete ${item.title}?`)) return; await deleteMedia(token, item.id); onMediaChange(media.filter((entry) => entry.id !== item.id)); }
-  return <section className="mt-10 border-y border-border py-8"><div className="flex items-center gap-3"><ImagePlus className="size-6 text-gold" /><div><h2 className="font-display text-3xl uppercase">Manage media</h2><p className="text-sm text-muted-foreground">Publish photos, posters, YouTube links or video files.</p></div></div><form onSubmit={publish} className="mt-6 grid gap-4 rounded-2xl border border-border p-5 md:grid-cols-4"><select value={kind} onChange={(event) => setKind(event.target.value as MediaInput["kind"])} className="rounded-md border border-input bg-card px-3"><option value="image">Photo</option><option value="poster">Poster</option><option value="video">Video</option></select><Input placeholder="Title" value={title} onChange={(event) => setTitle(event.target.value)} required /><Input placeholder="Category" value={category} onChange={(event) => setCategory(event.target.value)} required />{kind === "video" ? <><Input placeholder="YouTube ID or URL (optional)" value={youtubeId} onChange={(event) => setYoutubeId(event.target.value)} /><Input type="file" accept="video/*" onChange={(event) => setFile(event.target.files?.[0] ?? null)} /></> : <Input type="file" accept="image/*" onChange={(event) => setFile(event.target.files?.[0] ?? null)} required />}{kind === "video" ? <Input type="file" accept="image/*" onChange={(event) => setThumbnail(event.target.files?.[0] ?? null)} /> : null}<Button type="submit" variant="hero" disabled={saving}>{saving ? "Publishing..." : "Publish media"}</Button></form><div className="mt-6 max-h-[28rem] overflow-y-auto pr-1"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{media.map((item) => <article key={item.id} className="overflow-hidden rounded-2xl border border-border bg-card">{item.thumbnailUrl ? <img src={item.thumbnailUrl} alt="" className="h-32 w-full object-cover" /> : <div className="grid h-32 place-items-center bg-muted text-xs uppercase text-muted-foreground">Video</div>}<div className="p-4"><p className="text-xs uppercase text-gold">{item.kind} · {item.category}</p><h3 className="mt-2 font-semibold">{item.title}</h3><Button type="button" variant="ghost" size="sm" onClick={() => void remove(item)}><Trash2 className="size-4" /> Delete</Button></div></article>)}</div></div></section>;
+function MediaManager({
+  token,
+  media,
+  onMediaChange,
+}: {
+  token: string;
+  media: MediaItem[];
+  onMediaChange: (items: MediaItem[]) => void;
+}) {
+  const [kind, setKind] = useState<MediaInput["kind"]>("image");
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("Classes");
+  const [youtubeId, setYoutubeId] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [saving, setSaving] = useState(false);
+  async function payload(value: File | null) {
+    if (!value) return undefined;
+    if (value.size > 8 * 1024 * 1024) throw new Error("Files must be 8 MB or smaller.");
+    return new Promise<{ name: string; mimeType: string; base64: string }>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () =>
+        resolve({
+          name: value.name,
+          mimeType: value.type,
+          base64: String(reader.result).split(",")[1] ?? "",
+        });
+      reader.onerror = () => reject(new Error("Could not read file."));
+      reader.readAsDataURL(value);
+    });
+  }
+  async function publish(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      const input: MediaInput = { kind, title, category };
+      if (kind === "video") {
+        if (youtubeId.trim()) input.youtubeId = youtubeId;
+        const fileData = await payload(file);
+        if (fileData) input.file = fileData;
+        const thumb = await payload(thumbnail);
+        if (thumb) input.thumbnail = thumb;
+        if (!input.youtubeId && !input.file)
+          throw new Error("Enter a YouTube link or select a video file.");
+      } else {
+        const fileData = await payload(file);
+        if (fileData) input.file = fileData;
+      }
+      const item = await addMedia(token, input);
+      onMediaChange([item, ...media]);
+      setTitle("");
+      setYoutubeId("");
+      event.currentTarget.reset();
+      toast.success("Media published.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not publish media.");
+    } finally {
+      setSaving(false);
+    }
+  }
+  async function remove(item: MediaItem) {
+    if (!window.confirm(`Delete ${item.title}?`)) return;
+    await deleteMedia(token, item.id);
+    onMediaChange(media.filter((entry) => entry.id !== item.id));
+  }
+  return (
+    <section className="mt-10 border-y border-border py-8">
+      <div className="flex items-center gap-3">
+        <ImagePlus className="size-6 text-gold" />
+        <div>
+          <h2 className="font-display text-3xl uppercase">Manage media</h2>
+          <p className="text-sm text-muted-foreground">
+            Publish photos, posters, YouTube links or video files.
+          </p>
+        </div>
+      </div>
+      <form
+        onSubmit={publish}
+        className="mt-6 grid gap-4 rounded-2xl border border-border p-5 md:grid-cols-4"
+      >
+        <select
+          value={kind}
+          onChange={(event) => setKind(event.target.value as MediaInput["kind"])}
+          className="rounded-md border border-input bg-card px-3"
+        >
+          <option value="image">Photo</option>
+          <option value="poster">Poster</option>
+          <option value="video">Video</option>
+        </select>
+        <Input
+          placeholder="Title"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          required
+        />
+        <Input
+          placeholder="Category"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+          required
+        />
+        {kind === "video" ? (
+          <>
+            <Input
+              placeholder="YouTube ID or URL (optional)"
+              value={youtubeId}
+              onChange={(event) => setYoutubeId(event.target.value)}
+            />
+            <Input
+              type="file"
+              accept="video/*"
+              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+            />
+          </>
+        ) : (
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+            required
+          />
+        )}
+        {kind === "video" ? (
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(event) => setThumbnail(event.target.files?.[0] ?? null)}
+          />
+        ) : null}
+        <Button type="submit" variant="hero" disabled={saving}>
+          {saving ? "Publishing..." : "Publish media"}
+        </Button>
+      </form>
+      <div className="mt-6 max-h-[28rem] overflow-y-auto pr-1">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {media.map((item) => (
+            <article
+              key={item.id}
+              className="overflow-hidden rounded-2xl border border-border bg-card"
+            >
+              {item.thumbnailUrl ? (
+                <img src={item.thumbnailUrl} alt="" className="h-32 w-full object-cover" />
+              ) : (
+                <div className="grid h-32 place-items-center bg-muted text-xs uppercase text-muted-foreground">
+                  Video
+                </div>
+              )}
+              <div className="p-4">
+                <p className="text-xs uppercase text-gold">
+                  {item.kind} · {item.category}
+                </p>
+                <h3 className="mt-2 font-semibold">{item.title}</h3>
+                <Button type="button" variant="ghost" size="sm" onClick={() => void remove(item)}>
+                  <Trash2 className="size-4" /> Delete
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 }

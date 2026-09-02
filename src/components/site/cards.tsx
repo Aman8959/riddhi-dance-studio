@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Clock, IndianRupee, Instagram, Users, Youtube } from "lucide-react";
+import { Clock, IndianRupee, Instagram, Play, Users, Youtube } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,13 @@ export function ClassCard({ item }: { item: DanceClass }) {
           className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
-        <Badge className="absolute left-4 top-4 bg-gold text-gold-foreground">{item.level}</Badge>
+        <Link
+          to="/videos"
+          search={{ level: item.level }}
+          className="absolute left-4 top-4 transition-opacity hover:opacity-90"
+        >
+          <Badge className="bg-gold text-gold-foreground">{item.level}</Badge>
+        </Link>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <h3 className="font-display text-2xl uppercase tracking-wide">{item.name}</h3>
@@ -42,7 +48,7 @@ export function ClassCard({ item }: { item: DanceClass }) {
           <div className="col-span-2">Batch: {item.timing}</div>
           <div className="col-span-2">Trainer: {item.trainer}</div>
         </dl>
-        <div className="mt-5 flex items-center justify-between gap-3 border-t border-border pt-4">
+        <div className="mt-5 flex items-center justify-between gap-2 border-t border-border pt-4">
           <p className="flex items-center font-display text-2xl">
             <IndianRupee className="size-4" />
             {item.price.toLocaleString("en-IN")}
@@ -50,9 +56,16 @@ export function ClassCard({ item }: { item: DanceClass }) {
               /mo
             </span>
           </p>
-          <Button asChild variant="hero" size="sm" className="rounded-full">
-            <Link to="/trial">Book Trial</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button asChild variant="glass" size="sm" className="rounded-full text-xs">
+              <Link to="/videos" search={{ level: item.level }}>
+                <Play className="mr-1 size-3 fill-current" /> Videos
+              </Link>
+            </Button>
+            <Button asChild variant="hero" size="sm" className="rounded-full">
+              <Link to="/trial">Book Trial</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </article>
@@ -110,7 +123,9 @@ export function TrainerCard({ item }: { item: Trainer }) {
       </div>
       <div className="p-5">
         <h3 className="font-display text-2xl uppercase tracking-wide">{item.name}</h3>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">{item.position}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+          {item.position}
+        </p>
         <p className="mt-3 text-sm text-muted-foreground">
           <span className="text-foreground">Specialization:</span> {item.specialization}
         </p>

@@ -80,8 +80,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Riddhi Dance Studio" },
       {
         name: "description",
-        content:
-          "Riddhi Dance Studio — Best dance classes in Satna for kids, teens, and adults.",
+        content: "Riddhi Dance Studio — Best dance classes in Satna for kids, teens, and adults.",
       },
       { name: "author", content: "Riddhi Dance Studio" },
       { property: "og:type", content: "website" },

@@ -55,11 +55,16 @@ export const Route = createFileRoute("/contact")({
 
 const schema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
-  phone: z.string().trim().regex(/^[0-9+\s-]{10,15}$/, "Enter a valid phone number"),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^[0-9+\s-]{10,15}$/, "Enter a valid phone number"),
   email: z.string().trim().email("Enter a valid email").max(255),
   subject: z.string().trim().min(3, "Add a subject").max(120),
   message: z.string().trim().min(10, "Tell us a little more").max(1000),
-  acceptedTerms: z.literal("on", { errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }) }),
+  acceptedTerms: z.literal("on", {
+    errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }),
+  }),
 });
 
 function ContactPage() {
@@ -84,7 +89,9 @@ function ContactPage() {
       toast.success("Message sent! We usually reply the same day.");
       form.reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not send your message. Please try again.");
+      toast.error(
+        error instanceof Error ? error.message : "Could not send your message. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -153,7 +160,11 @@ function ContactPage() {
           </div>
         </div>
 
-        <form onSubmit={onSubmit} noValidate className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8">
+        <form
+          onSubmit={onSubmit}
+          noValidate
+          className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8"
+        >
           <h2 className="font-display text-3xl uppercase tracking-wide">Send a message</h2>
           {(
             [
@@ -180,15 +191,29 @@ function ContactPage() {
           </div>
           <div className="rounded-lg border border-border/50 bg-card/50 p-4">
             <div className="flex items-start gap-3">
-              <Checkbox id="acceptedTerms" name="acceptedTerms" aria-invalid={Boolean(errors["acceptedTerms"])} />
-              <Label htmlFor="acceptedTerms" className="text-xs font-normal leading-relaxed text-muted-foreground">
+              <Checkbox
+                id="acceptedTerms"
+                name="acceptedTerms"
+                aria-invalid={Boolean(errors["acceptedTerms"])}
+              />
+              <Label
+                htmlFor="acceptedTerms"
+                className="text-xs font-normal leading-relaxed text-muted-foreground"
+              >
                 I agree to the{" "}
-                <Link to="/terms" className="text-gold hover:underline">Terms of Service</Link>{" "}
+                <Link to="/terms" className="text-gold hover:underline">
+                  Terms of Service
+                </Link>{" "}
                 and acknowledge the{" "}
-                <Link to="/privacy-policy" className="text-gold hover:underline">Privacy Policy</Link>.
+                <Link to="/privacy-policy" className="text-gold hover:underline">
+                  Privacy Policy
+                </Link>
+                .
               </Label>
             </div>
-            {errors["acceptedTerms"] ? <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p> : null}
+            {errors["acceptedTerms"] ? (
+              <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p>
+            ) : null}
           </div>
           <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
             {submitting ? "Sending..." : "Send Message"}

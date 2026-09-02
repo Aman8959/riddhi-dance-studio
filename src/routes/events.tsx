@@ -58,8 +58,7 @@ function getEventDates(event: (typeof events)[number]) {
     throw new Error(`Invalid event duration: ${event.duration}`);
   }
 
-  const duration = Number(durationMatch[1]) *
-    (durationMatch[2].startsWith("Hour") ? 60 : 1);
+  const duration = Number(durationMatch[1]) * (durationMatch[2].startsWith("Hour") ? 60 : 1);
   const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
   if (endDate <= startDate) {
     throw new Error(`Event end must be later than start: ${event.name}`);
@@ -118,7 +117,13 @@ export const Route = createFileRoute("/events")({
 
 function EventsPage() {
   const [managedEvents, setManagedEvents] = useState(events);
-  useEffect(() => { void getContent("events").then((next) => { if (next.length) setManagedEvents(next as typeof events); }).catch(() => undefined); }, []);
+  useEffect(() => {
+    void getContent("events")
+      .then((next) => {
+        if (next.length) setManagedEvents(next as typeof events);
+      })
+      .catch(() => undefined);
+  }, []);
   return (
     <>
       <PageHero
@@ -154,7 +159,9 @@ function EventsPage() {
                       {e.status}
                     </Badge>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{e.description}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                    {e.description}
+                  </p>
                   <ul className="mt-4 grid gap-2 text-xs text-muted-foreground">
                     <li className="flex items-center gap-2">
                       <CalendarDays className="size-3.5 text-primary" /> {e.date}

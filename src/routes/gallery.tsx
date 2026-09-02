@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { X } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Play, Video, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
@@ -25,16 +25,19 @@ function GalleryPage() {
   const [active, setActive] = useState<GalleryItem | null>(null);
   const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
 
-  useEffect(() => { void getMedia().then(setRemoteMedia).catch(() => undefined); }, []);
+  useEffect(() => {
+    void getMedia()
+      .then(setRemoteMedia)
+      .catch(() => undefined);
+  }, []);
 
-  const publishedItems: GalleryItem[] = remoteMedia
-    .filter((item) => item.kind === "image" || item.kind === "poster")
-    .map((item) => ({ id: item.id, image: item.url, title: item.title, category: "Events" }));
-
-  const items = useMemo(
-    () => { const allItems = [...publishedItems, ...galleryItems]; return category === "All" ? allItems : allItems.filter((i) => i.category === category); },
-    [category, remoteMedia],
-  );
+  const items = useMemo(() => {
+    const publishedItems: GalleryItem[] = remoteMedia
+      .filter((item) => item.kind === "image" || item.kind === "poster")
+      .map((item) => ({ id: item.id, image: item.url, title: item.title, category: "Events" }));
+    const allItems = [...publishedItems, ...galleryItems];
+    return category === "All" ? allItems : allItems.filter((i) => i.category === category);
+  }, [category, remoteMedia]);
 
   return (
     <>
@@ -45,19 +48,33 @@ function GalleryPage() {
       />
 
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap gap-2">
-          {galleryCategories.map((c) => (
-            <Button
-              key={c}
-              type="button"
-              size="sm"
-              variant={category === c ? "hero" : "glass"}
-              className="rounded-full"
-              onClick={() => setCategory(c)}
-            >
-              {c}
-            </Button>
-          ))}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {galleryCategories.map((c) => (
+              <Button
+                key={c}
+                type="button"
+                size="sm"
+                variant={category === c ? "hero" : "glass"}
+                className="rounded-full"
+                onClick={() => setCategory(c)}
+              >
+                {c}
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            asChild
+            variant="hero"
+            size="sm"
+            className="w-fit rounded-full shadow-[var(--shadow-glow)]"
+          >
+            <Link to="/videos">
+              <Play className="mr-1.5 size-3.5 fill-current" />
+              Watch Video Gallery
+            </Link>
+          </Button>
         </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -84,6 +101,35 @@ function GalleryPage() {
               </button>
             </Reveal>
           ))}
+        </div>
+
+        {/* Dedicated Video Section Banner */}
+        <div className="glass-panel mt-16 flex flex-col items-center justify-between gap-6 rounded-3xl p-6 sm:p-10 md:flex-row">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
+              <Video className="size-3.5 text-gold" />
+              Video Showcase
+            </div>
+            <h2 className="font-display text-2xl uppercase tracking-wide sm:text-3xl">
+              Want to see our choreography in motion?
+            </h2>
+            <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              Watch student performance videos, beginner to advanced choreography masterclasses, and
+              live stage reels in our video library.
+            </p>
+          </div>
+          <Button
+            asChild
+            variant="hero"
+            size="lg"
+            className="w-full shrink-0 rounded-full sm:w-auto"
+          >
+            <Link to="/videos">
+              <Play className="mr-2 size-4 fill-current" />
+              Explore All Videos
+              <ArrowRight className="ml-2 size-4" />
+            </Link>
+          </Button>
         </div>
       </section>
 

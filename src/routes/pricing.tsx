@@ -24,7 +24,13 @@ export const Route = createFileRoute("/pricing")({
 
 function PricingPage() {
   const [managedPlans, setManagedPlans] = useState(plans);
-  useEffect(() => { void getContent("plans").then((next) => { if (next.length) setManagedPlans(next as typeof plans); }).catch(() => undefined); }, []);
+  useEffect(() => {
+    void getContent("plans")
+      .then((next) => {
+        if (next.length) setManagedPlans(next as typeof plans);
+      })
+      .catch(() => undefined);
+  }, []);
   return (
     <>
       <PageHero
@@ -53,7 +59,9 @@ function PricingPage() {
                   <IndianRupee className="size-6" />
                   {p.price.toLocaleString("en-IN")}
                 </p>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{p.period}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  {p.period}
+                </p>
                 <ul className="mt-6 flex-1 space-y-3 text-sm text-muted-foreground">
                   {p.features.map((f) => (
                     <li key={f} className="flex gap-2">
@@ -88,7 +96,9 @@ function PricingPage() {
               <Reveal key={s.id} delay={i * 60}>
                 <div className="glass-panel h-full rounded-2xl p-6">
                   <h3 className="font-display text-xl uppercase tracking-wide">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {s.description}
+                  </p>
                 </div>
               </Reveal>
             ))}

@@ -1,0 +1,6 @@
+{
+  "name": "Riddhi Dance Studio",
+  "description": "Riddhi Dance Studio website with class details, schedule, pricing, registration, and media gallery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

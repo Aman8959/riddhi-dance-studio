@@ -12,7 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { createSeoHead } from "@/config/seo";
-import { batches, danceClasses, danceStyles, events, faqs, plans, trainers, videos } from "@/data/studio";
+import {
+  batches,
+  danceClasses,
+  danceStyles,
+  events,
+  faqs,
+  plans,
+  trainers,
+  videos,
+} from "@/data/studio";
 import {
   Accordion,
   AccordionContent,
@@ -72,10 +81,26 @@ export const Route = createFileRoute("/")({
 });
 
 const whyUs = [
-  { icon: Users, title: "Small batches", text: "Capped batch sizes so every dancer gets personal corrections." },
-  { icon: Sparkles, title: "Graded syllabus", text: "Clear term plans from foundations to advanced choreography." },
-  { icon: Trophy, title: "Real stage time", text: "Showcases, competitions and community performances every year." },
-  { icon: CalendarDays, title: "Flexible batches", text: "Morning and evening slots with easy batch transfers." },
+  {
+    icon: Users,
+    title: "Small batches",
+    text: "Capped batch sizes so every dancer gets personal corrections.",
+  },
+  {
+    icon: Sparkles,
+    title: "Graded syllabus",
+    text: "Clear term plans from foundations to advanced choreography.",
+  },
+  {
+    icon: Trophy,
+    title: "Real stage time",
+    text: "Showcases, competitions and community performances every year.",
+  },
+  {
+    icon: CalendarDays,
+    title: "Flexible batches",
+    text: "Morning and evening slots with easy batch transfers.",
+  },
 ];
 
 function HomePage() {
@@ -98,9 +123,7 @@ function HomePage() {
         <div className="absolute inset-0 -z-10 bg-stage" />
 
         <div className="mx-auto w-full max-w-7xl px-7 pt-28 pb-20 sm:px-6 lg:px-8">
-          <Badge className="bg-gold text-gold-foreground">
-            Now enrolling · Free trial class
-          </Badge>
+          <Badge className="bg-gold text-gold-foreground">Now enrolling · Free trial class</Badge>
           <h1 className="mt-4 max-w-full text-[clamp(2.5rem,11vw,3.25rem)] font-light uppercase leading-[0.98] tracking-[0.03em] sm:mt-6 sm:max-w-3xl sm:text-6xl sm:font-normal sm:leading-[0.98] sm:tracking-wide lg:text-7xl">
             <span className="block md:inline">Dance in Satna</span>{" "}
             <span className="block md:inline">for Every Age.</span>
@@ -196,7 +219,9 @@ function HomePage() {
                 </div>
                 <div className="p-5">
                   <p className="text-xs uppercase tracking-[0.2em] text-gold">{video.category}</p>
-                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">{video.title}</h3>
+                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">
+                    {video.title}
+                  </h3>
                 </div>
               </Link>
             </Reveal>
@@ -263,7 +288,9 @@ function HomePage() {
                   <p className="text-xs uppercase tracking-[0.2em] text-gold">
                     {b.day} · {b.time}
                   </p>
-                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">{b.className}</h3>
+                  <h3 className="mt-2 font-display text-xl uppercase tracking-wide">
+                    {b.className}
+                  </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
                     Age {b.ageGroup} · {b.trainer} · {b.seatsLeft} seats left
                   </p>
@@ -337,13 +364,20 @@ function HomePage() {
               >
                 <h3 className="font-display text-3xl uppercase tracking-wide">{p.name}</h3>
                 <p className="mt-3 font-display text-4xl">₹{p.price.toLocaleString("en-IN")}</p>
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{p.period}</p>
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                  {p.period}
+                </p>
                 <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
                   {p.features.map((f) => (
                     <li key={f}>· {f}</li>
                   ))}
                 </ul>
-                <Button asChild variant={p.highlight ? "hero" : "glass"} size="xl" className="mt-8 w-full">
+                <Button
+                  asChild
+                  variant={p.highlight ? "hero" : "glass"}
+                  size="xl"
+                  className="mt-8 w-full"
+                >
                   <Link to="/register">Join Now</Link>
                 </Button>
               </div>

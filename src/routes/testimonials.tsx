@@ -35,14 +35,16 @@ export const Route = createFileRoute("/testimonials")({
 function TestimonialsPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [approvedReviews, setApprovedReviews] = useState<Array<{
-    id: string;
-    name: string;
-    role: string;
-    rating: number;
-    quote: string;
-    classAttended: string;
-  }>>([]);
+  const [approvedReviews, setApprovedReviews] = useState<
+    Array<{
+      id: string;
+      name: string;
+      role: string;
+      rating: number;
+      quote: string;
+      classAttended: string;
+    }>
+  >([]);
 
   useEffect(() => {
     void (async () => {
@@ -127,7 +129,11 @@ function TestimonialsPage() {
       </section>
 
       <section className="section-pad mx-auto max-w-4xl px-4 pb-16 sm:px-6 lg:px-8">
-        <form onSubmit={onSubmit} noValidate className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8">
+        <form
+          onSubmit={onSubmit}
+          noValidate
+          className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8"
+        >
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-primary">Leave a review</p>
             <h2 className="mt-2 font-display text-3xl uppercase tracking-wide">
@@ -139,7 +145,9 @@ function TestimonialsPage() {
             <div>
               <Label htmlFor="name">Your name *</Label>
               <Input id="name" name="name" type="text" className="mt-2" />
-              {errors["name"] ? <p className="mt-1 text-xs text-destructive">{errors["name"]}</p> : null}
+              {errors["name"] ? (
+                <p className="mt-1 text-xs text-destructive">{errors["name"]}</p>
+              ) : null}
             </div>
 
             <div>
@@ -165,13 +173,17 @@ function TestimonialsPage() {
               <option value="2">2 - Fair</option>
               <option value="1">1 - Poor</option>
             </select>
-            {errors["rating"] ? <p className="mt-1 text-xs text-destructive">{errors["rating"]}</p> : null}
+            {errors["rating"] ? (
+              <p className="mt-1 text-xs text-destructive">{errors["rating"]}</p>
+            ) : null}
           </div>
 
           <div>
             <Label htmlFor="message">Your review *</Label>
             <Textarea id="message" name="message" rows={5} className="mt-2" />
-            {errors["message"] ? <p className="mt-1 text-xs text-destructive">{errors["message"]}</p> : null}
+            {errors["message"] ? (
+              <p className="mt-1 text-xs text-destructive">{errors["message"]}</p>
+            ) : null}
           </div>
 
           <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>

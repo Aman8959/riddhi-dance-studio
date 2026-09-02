@@ -55,7 +55,9 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Quick Links</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">
+            Quick Links
+          </h3>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {quickLinks.map((l) => (
               <li key={l.to}>
@@ -68,7 +70,9 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">Dance Styles</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-gold">
+            Dance Styles
+          </h3>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             {danceStyles.map((s) => (
               <li key={s.slug}>

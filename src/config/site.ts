@@ -9,8 +9,7 @@ export const siteConfig = {
     "A professional dance academy training kids, teens and adults across Bollywood, Hip-Hop, Contemporary, Classical and dance fitness.",
   phone: "+91 7024626760",
   whatsapp: "7024626760",
-  whatsappMessage:
-    "Hello Riddhi Dance Studio, I would like to know more about your dance classes.",
+  whatsappMessage: "Hello Riddhi Dance Studio, I would like to know more about your dance classes.",
   email: "riddhshukla9706@gmail.com",
   address: {
     line1: "Ashok Vihar Colony Rajiv park ",
@@ -23,7 +22,8 @@ export const siteConfig = {
     { days: "Sunday", time: "9:00 AM – 2:00 PM (workshops only)" },
   ],
   social: {
-    instagram: "https://www.instagram.com/rds_dance_studio_satna?igsh=czQ3ZzQ1cmN1azJj&igsi=czQ3ZzQ1cmN1azJj",
+    instagram:
+      "https://www.instagram.com/rds_dance_studio_satna?igsh=czQ3ZzQ1cmN1azJj&igsi=czQ3ZzQ1cmN1azJj",
     facebook: "https://www.facebook.com/Rdsdancestudiosatna",
     youtube: "https://youtube.com/@riddhishukla9706?si=rlOftPpMqzwwKEl-",
   },

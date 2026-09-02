@@ -32,7 +32,10 @@ const schema = z.object({
   dob: z.string().trim().min(1, "Date of birth is required"),
   age: z.coerce.number().min(3, "Minimum age is 3").max(90),
   gender: z.string().trim().min(1, "Select a gender"),
-  mobile: z.string().trim().regex(/^[0-9+\s-]{10,15}$/, "Enter a valid mobile number"),
+  mobile: z
+    .string()
+    .trim()
+    .regex(/^[0-9+\s-]{10,15}$/, "Enter a valid mobile number"),
   email: z.string().trim().email("Enter a valid email").max(255),
   address: z.string().trim().min(5, "Enter your address").max(300),
   style: z.string().trim().min(1, "Select a dance style"),
@@ -40,7 +43,9 @@ const schema = z.object({
   experience: z.string().trim().max(300).optional().or(z.literal("")),
   startDate: z.string().trim().min(1, "Select a preferred start date"),
   message: z.string().trim().max(600).optional().or(z.literal("")),
-  acceptedTerms: z.literal("on", { errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }) }),
+  acceptedTerms: z.literal("on", {
+    errorMap: () => ({ message: "Please accept the Terms and Privacy Policy" }),
+  }),
 });
 
 function RegisterPage() {
@@ -48,7 +53,13 @@ function RegisterPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  useEffect(() => { void getContent("classes").then((next) => { if (next.length) setManagedClasses(normalizeClassImages(next as typeof danceClasses)); }).catch(() => undefined); }, []);
+  useEffect(() => {
+    void getContent("classes")
+      .then((next) => {
+        if (next.length) setManagedClasses(normalizeClassImages(next as typeof danceClasses));
+      })
+      .catch(() => undefined);
+  }, []);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -73,7 +84,11 @@ function RegisterPage() {
       toast.success("Registration received — we will confirm your batch shortly.");
       e.currentTarget.reset();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Could not submit your registration. Please try again.");
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Could not submit your registration. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -106,9 +121,17 @@ function RegisterPage() {
             </div>
           </div>
         ) : (
-          <form onSubmit={onSubmit} noValidate className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8">
+          <form
+            onSubmit={onSubmit}
+            noValidate
+            className="glass-panel grid gap-5 rounded-3xl p-6 sm:p-8"
+          >
             <Field label="Student name" name="studentName" error={errors["studentName"]} required />
-            <Field label="Parent name (if applicable)" name="parentName" error={errors["parentName"]} />
+            <Field
+              label="Parent name (if applicable)"
+              name="parentName"
+              error={errors["parentName"]}
+            />
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Date of birth" name="dob" type="date" error={errors["dob"]} required />
               <Field label="Age" name="age" type="number" error={errors["age"]} required />
@@ -120,7 +143,13 @@ function RegisterPage() {
                 error={errors["gender"]}
                 options={["Female", "Male", "Other", "Prefer not to say"]}
               />
-              <Field label="Mobile number" name="mobile" type="tel" error={errors["mobile"]} required />
+              <Field
+                label="Mobile number"
+                name="mobile"
+                type="tel"
+                error={errors["mobile"]}
+                required
+              />
             </div>
             <Field label="Email" name="email" type="email" error={errors["email"]} required />
             <Field label="Address" name="address" error={errors["address"]} required />
@@ -147,7 +176,13 @@ function RegisterPage() {
             />
             <div>
               <Label htmlFor="experience">Previous dance experience</Label>
-              <Textarea id="experience" name="experience" rows={3} maxLength={300} className="mt-2" />
+              <Textarea
+                id="experience"
+                name="experience"
+                rows={3}
+                maxLength={300}
+                className="mt-2"
+              />
             </div>
             <div>
               <Label htmlFor="message">Message</Label>
@@ -155,15 +190,29 @@ function RegisterPage() {
             </div>
             <div className="rounded-lg border border-border/50 bg-card/50 p-4">
               <div className="flex items-start gap-3">
-                <Checkbox id="acceptedTerms" name="acceptedTerms" aria-invalid={Boolean(errors["acceptedTerms"])} />
-                <Label htmlFor="acceptedTerms" className="text-xs font-normal leading-relaxed text-muted-foreground">
+                <Checkbox
+                  id="acceptedTerms"
+                  name="acceptedTerms"
+                  aria-invalid={Boolean(errors["acceptedTerms"])}
+                />
+                <Label
+                  htmlFor="acceptedTerms"
+                  className="text-xs font-normal leading-relaxed text-muted-foreground"
+                >
                   I agree to the{" "}
-                  <Link to="/terms" className="text-gold hover:underline">Terms of Service</Link>{" "}
+                  <Link to="/terms" className="text-gold hover:underline">
+                    Terms of Service
+                  </Link>{" "}
                   and acknowledge the{" "}
-                  <Link to="/privacy-policy" className="text-gold hover:underline">Privacy Policy</Link>.
+                  <Link to="/privacy-policy" className="text-gold hover:underline">
+                    Privacy Policy
+                  </Link>
+                  .
                 </Label>
               </div>
-              {errors["acceptedTerms"] ? <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p> : null}
+              {errors["acceptedTerms"] ? (
+                <p className="mt-2 text-xs text-destructive">{errors["acceptedTerms"]}</p>
+              ) : null}
             </div>
             <Button type="submit" variant="hero" size="xl" className="w-full" disabled={submitting}>
               {submitting ? "Submitting..." : "Submit Registration"}

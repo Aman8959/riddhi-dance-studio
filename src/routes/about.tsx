@@ -99,7 +99,11 @@ function AboutPage() {
 
       <section className="section-pad border-t border-border bg-card/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeading eyebrow="What drives us" title="Vision, mission & values" align="center" />
+          <SectionHeading
+            eyebrow="What drives us"
+            title="Vision, mission & values"
+            align="center"
+          />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {pillars.map((p, i) => (
               <Reveal key={p.title} delay={i * 80}>
@@ -125,7 +129,9 @@ function AboutPage() {
             <Reveal key={s.id} delay={i * 70}>
               <div className="glass-panel h-full rounded-2xl p-6">
                 <h3 className="font-display text-xl uppercase tracking-wide">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.description}</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {s.description}
+                </p>
               </div>
             </Reveal>
           ))}

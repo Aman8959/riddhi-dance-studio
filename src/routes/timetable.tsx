@@ -30,7 +30,13 @@ const unique = (values: string[]) => ["All", ...Array.from(new Set(values))];
 
 function TimetablePage() {
   const [managedBatches, setManagedBatches] = useState(batches);
-  useEffect(() => { void getContent("batches").then((next) => { if (next.length) setManagedBatches(next as typeof batches); }).catch(() => undefined); }, []);
+  useEffect(() => {
+    void getContent("batches")
+      .then((next) => {
+        if (next.length) setManagedBatches(next as typeof batches);
+      })
+      .catch(() => undefined);
+  }, []);
   const [style, setStyle] = useState("All");
   const [day, setDay] = useState("All");
   const [trainer, setTrainer] = useState("All");
@@ -38,11 +44,31 @@ function TimetablePage() {
   const [ageGroup, setAgeGroup] = useState("All");
 
   const filters = [
-    { label: "Dance style", value: style, set: setStyle, options: unique(managedBatches.map((b) => b.style)) },
+    {
+      label: "Dance style",
+      value: style,
+      set: setStyle,
+      options: unique(managedBatches.map((b) => b.style)),
+    },
     { label: "Day", value: day, set: setDay, options: unique(managedBatches.map((b) => b.day)) },
-    { label: "Age group", value: ageGroup, set: setAgeGroup, options: unique(managedBatches.map((b) => b.ageGroup)) },
-    { label: "Trainer", value: trainer, set: setTrainer, options: unique(managedBatches.map((b) => b.trainer)) },
-    { label: "Level", value: level, set: setLevel, options: unique(managedBatches.map((b) => b.level)) },
+    {
+      label: "Age group",
+      value: ageGroup,
+      set: setAgeGroup,
+      options: unique(managedBatches.map((b) => b.ageGroup)),
+    },
+    {
+      label: "Trainer",
+      value: trainer,
+      set: setTrainer,
+      options: unique(managedBatches.map((b) => b.trainer)),
+    },
+    {
+      label: "Level",
+      value: level,
+      set: setLevel,
+      options: unique(managedBatches.map((b) => b.level)),
+    },
   ];
 
   const rows = useMemo(
@@ -70,7 +96,10 @@ function TimetablePage() {
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="glass-panel grid gap-4 rounded-2xl p-4 sm:grid-cols-2 lg:grid-cols-5">
           {filters.map((f) => (
-            <label key={f.label} className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+            <label
+              key={f.label}
+              className="text-xs uppercase tracking-[0.16em] text-muted-foreground"
+            >
               {f.label}
               <Select value={f.value} onValueChange={f.set}>
                 <SelectTrigger className="mt-2 w-full">
@@ -105,7 +134,10 @@ function TimetablePage() {
             </thead>
             <tbody>
               {rows.map((b) => (
-                <tr key={b.id} className="border-t border-border transition-colors hover:bg-card/40">
+                <tr
+                  key={b.id}
+                  className="border-t border-border transition-colors hover:bg-card/40"
+                >
                   <td className="px-5 py-4 font-semibold">{b.day}</td>
                   <td className="px-5 py-4 text-gold">{b.time}</td>
                   <td className="px-5 py-4">{b.className}</td>
