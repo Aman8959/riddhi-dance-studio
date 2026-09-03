@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Search, Video } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Play, Search, Video, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
@@ -8,12 +9,26 @@ import { ClassCard } from "@/components/site/cards";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { danceClasses, normalizeClassImages, videos, type VideoItem } from "@/data/studio";
-import { getContent } from "@/lib/submissions";
-import { cn } from "@/lib/utils";
+import {
+  danceClasses,
+  normalizeClassImages,
+  videos,
+  type Level,
+  type VideoItem,
+} from "@/data/studio";
+import { getContent, getMedia, type MediaItem } from "@/lib/submissions";
 import { createSeoHead } from "@/config/seo";
 
+const classSearchSchema = z.object({
+  level: z.string().optional(),
+  q: z.string().optional(),
+});
+
 export const Route = createFileRoute("/classes")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const parsed = classSearchSchema.safeParse(search);
+    return parsed.success ? parsed.data : {};
+  },
   head: () =>
     createSeoHead({
       title: "Dance Classes in Satna | Bollywood, Hip-Hop, Classical & More",
@@ -25,13 +40,29 @@ export const Route = createFileRoute("/classes")({
 });
 
 const levels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"] as const;
+type LevelOption = (typeof levels)[number];
 
 function ClassesPage() {
+  const search = Route.useSearch();
   const [classes, setClasses] = useState(danceClasses);
-  const [query, setQuery] = useState("");
-  const [level, setLevel] = useState<(typeof levels)[number]>("All");
+  const [query, setQuery] = useState(search.q ?? "");
+  const [level, setLevel] = useState<LevelOption>(
+    levels.includes(search.level as LevelOption) ? (search.level as LevelOption) : "All",
+  );
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
 
+  // Sync if URL search changes
+  useEffect(() => {
+    if (search.level && levels.includes(search.level as LevelOption)) {
+      setLevel(search.level as LevelOption);
+    }
+    if (search.q !== undefined) {
+      setQuery(search.q);
+    }
+  }, [search.level, search.q]);
+
+  // Load published classes
   useEffect(() => {
     void getContent("classes")
       .then((next) => {
@@ -40,25 +71,51 @@ function ClassesPage() {
       .catch(() => undefined);
   }, []);
 
+  // Load remote media
+  useEffect(() => {
+    void getMedia()
+      .then(setRemoteMedia)
+      .catch(() => undefined);
+  }, []);
+
+  const publishedVideos: VideoItem[] = useMemo(() => {
+    return remoteMedia
+      .filter((item) => item.kind === "video" && item.youtubeId)
+      .map((item) => ({
+        id: item.id,
+        title: item.title,
+        category: item.category,
+        level: "All Levels" as Level,
+        youtubeId: item.youtubeId,
+        thumbnail: item.thumbnailUrl,
+      }));
+  }, [remoteMedia]);
+
+  const allVideos = useMemo(() => {
+    return [...publishedVideos, ...videos];
+  }, [publishedVideos]);
+
+  // Filter classes
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     return classes.filter((c) => {
       const matchesQuery =
         !q ||
         [c.name, c.style, c.trainer, c.ageGroup, c.description].join(" ").toLowerCase().includes(q);
-      const matchesLevel = level === "All" || c.level === level;
-      return matchesQuery && matchesLevel;
+      const matchesLvl = level === "All" || c.level === level;
+      return matchesQuery && matchesLvl;
     });
   }, [classes, query, level]);
 
+  // Videos corresponding to the selected level
   const levelVideos = useMemo(() => {
     if (level === "All") {
-      return videos.slice(0, 6);
+      return allVideos.slice(0, 6);
     }
-    return videos.filter(
+    return allVideos.filter(
       (v) => v.level === level || (level === "All Levels" && v.level === "All Levels"),
     );
-  }, [level]);
+  }, [allVideos, level]);
 
   return (
     <>
@@ -69,34 +126,49 @@ function ClassesPage() {
       />
 
       <section className="section-pad mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel flex flex-col gap-4 rounded-2xl p-4 sm:flex-row sm:items-center">
-          <div className="relative flex-1">
+        {/* Simple & Clean Filter Bar */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Level Filter Tabs */}
+          <div className="flex flex-wrap items-center gap-2">
+            {levels.map((lvl) => (
+              <Button
+                key={lvl}
+                type="button"
+                size="sm"
+                variant={level === lvl ? "hero" : "glass"}
+                className="rounded-full px-4 text-xs font-medium"
+                onClick={() => setLevel(lvl)}
+              >
+                {lvl === "All" ? "All Classes" : lvl}
+              </Button>
+            ))}
+          </div>
+
+          {/* Search input */}
+          <div className="relative w-full sm:w-72">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value.slice(0, 80))}
-              placeholder="Search class, style or trainer"
+              placeholder="Search style or trainer..."
               aria-label="Search classes"
-              className="pl-9"
+              className="h-9 pl-9 pr-8 text-sm"
             />
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {levels.map((l) => (
-              <Button
-                key={l}
+            {query ? (
+              <button
                 type="button"
-                size="sm"
-                variant={level === l ? "hero" : "glass"}
-                className={cn("rounded-full")}
-                onClick={() => setLevel(l)}
+                onClick={() => setQuery("")}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                aria-label="Clear search"
               >
-                {l}
-              </Button>
-            ))}
+                <X className="size-3.5" />
+              </button>
+            ) : null}
           </div>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Classes Grid */}
+        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {results.map((c, i) => (
             <Reveal key={c.id} delay={i * 60}>
               <ClassCard item={c} />
@@ -105,42 +177,47 @@ function ClassesPage() {
         </div>
 
         {results.length === 0 ? (
-          <p className="mt-12 text-center text-sm text-muted-foreground">
-            No classes match that search. Try a different style or level.
-          </p>
+          <div className="mt-12 text-center">
+            <p className="text-base font-semibold">No classes match that search.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try selecting &ldquo;All Classes&rdquo; or clearing the search box.
+            </p>
+            <Button
+              type="button"
+              variant="hero"
+              size="sm"
+              className="mt-4 rounded-full"
+              onClick={() => {
+                setLevel("All");
+                setQuery("");
+              }}
+            >
+              Reset Filters
+            </Button>
+          </div>
         ) : null}
 
-        {/* Level Videos Showcase Section */}
+        {/* Level Video Showcase (In-page preview without navigation) */}
         <div className="mt-20 border-t border-border pt-12">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
-                <Video className="size-3.5" />
-                {level === "All" ? "Level Highlights" : `${level} Level Showcase`}
-              </div>
-              <h2 className="mt-3 font-display text-3xl uppercase tracking-wide">
-                {level === "All"
-                  ? "Featured Class & Choreography Videos"
-                  : `${level} Category Videos`}
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {level === "Advanced"
-                  ? "Watch high-intensity choreography drills, masterclass routines and advanced cyphers."
-                  : level === "Intermediate"
-                    ? "See technical floorwork, transitions and expressive student choreography."
-                    : level === "Beginner"
-                      ? "Check out foundational rhythm routines, basic steps and beginner showcase reels."
-                      : "See what our dancers achieve across all experience levels."}
-              </p>
+          <div className="flex flex-col gap-2">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
+              <Video className="size-3.5" />
+              {level === "All" ? "Level Highlights" : `${level} Level Showcase`}
             </div>
-
-            <Button asChild variant="hero" size="sm" className="w-fit rounded-full">
-              <Link to="/videos" search={{ level: level === "All" ? undefined : level }}>
-                <Play className="mr-1.5 size-3.5 fill-current" />
-                View All {level === "All" ? "" : `${level} `}Videos
-                <ArrowRight className="ml-1.5 size-4" />
-              </Link>
-            </Button>
+            <h2 className="mt-2 font-display text-3xl uppercase tracking-wide">
+              {level === "All"
+                ? "Featured Class & Choreography Videos"
+                : `${level} Category Videos`}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {level === "Advanced"
+                ? "Watch high-intensity choreography drills, masterclass routines and advanced cyphers."
+                : level === "Intermediate"
+                  ? "See technical floorwork, transitions and expressive student choreography."
+                  : level === "Beginner"
+                    ? "Check out foundational rhythm routines, basic steps and beginner showcase reels."
+                    : "See what our dancers achieve across all experience levels."}
+            </p>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -149,14 +226,24 @@ function ClassesPage() {
                 <article className="glass-panel overflow-hidden rounded-2xl">
                   <div className="relative aspect-video bg-muted">
                     {playingVideo === v.id && v.youtubeId ? (
-                      <iframe
-                        src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
-                        title={v.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                        loading="lazy"
-                        className="size-full"
-                      />
+                      <div className="relative size-full">
+                        <iframe
+                          src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
+                          title={v.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                          allowFullScreen
+                          loading="lazy"
+                          className="size-full"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPlayingVideo(null)}
+                          className="absolute right-2 top-2 z-10 grid size-7 place-items-center rounded-full bg-background/80 text-foreground shadow hover:bg-background"
+                          aria-label="Close video"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      </div>
                     ) : (
                       <button
                         type="button"
@@ -202,7 +289,7 @@ function ClassesPage() {
 
           {levelVideos.length === 0 ? (
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              No videos currently listed for {level} level. Check the full Video Gallery.
+              No videos currently listed for {level} level.
             </p>
           ) : null}
         </div>

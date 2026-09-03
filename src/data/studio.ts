@@ -500,6 +500,30 @@ export const videos: VideoItem[] = [
     youtubeId: "dQw4w9WgXcQ",
     thumbnail: hiphop,
   },
+  {
+    id: "v10",
+    title: "Intermediate Contemporary Flow & Floor Transitions",
+    category: "Choreography",
+    level: "Intermediate",
+    youtubeId: "dQw4w9WgXcQ",
+    thumbnail: contemporary,
+  },
+  {
+    id: "v11",
+    title: "Intermediate Semi-Classical Thillana Routine",
+    category: "Performances",
+    level: "Intermediate",
+    youtubeId: "dQw4w9WgXcQ",
+    thumbnail: classical,
+  },
+  {
+    id: "v12",
+    title: "Beginner Bollywood Hooksteps & Expressions",
+    category: "Classes",
+    level: "Beginner",
+    youtubeId: "dQw4w9WgXcQ",
+    thumbnail: bollywood,
+  },
 ];
 
 export type StudioEvent = {
