@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { batches } from "@/data/studio";
+import { batches, normalizeLevel } from "@/data/studio";
 import { getContent } from "@/lib/submissions";
 import { createSeoHead } from "@/config/seo";
 
@@ -29,11 +29,20 @@ export const Route = createFileRoute("/timetable")({
 const unique = (values: string[]) => ["All", ...Array.from(new Set(values))];
 
 function TimetablePage() {
-  const [managedBatches, setManagedBatches] = useState(batches);
+  const [managedBatches, setManagedBatches] = useState(() =>
+    batches.map((b) => ({ ...b, level: normalizeLevel(b.level) })),
+  );
   useEffect(() => {
     void getContent("batches")
       .then((next) => {
-        if (next.length) setManagedBatches(next as typeof batches);
+        if (next.length) {
+          setManagedBatches(
+            (next as typeof batches).map((b) => ({
+              ...b,
+              level: normalizeLevel(b.level),
+            })),
+          );
+        }
       })
       .catch(() => undefined);
   }, []);

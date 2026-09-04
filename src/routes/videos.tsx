@@ -7,14 +7,27 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { videos, type Level, type VideoItem } from "@/data/studio";
+import {
+  normalizeLevel,
+  normalizeLevelFilter,
+  videos,
+  type Level,
+  type LevelFilterOption,
+  type VideoItem,
+} from "@/data/studio";
 import { getMedia, type MediaItem } from "@/lib/submissions";
 import { createSeoHead } from "@/config/seo";
 
-const videoLevels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"] as const;
+const videoLevels: { id: LevelFilterOption; label: string }[] = [
+  { id: "All", label: "All Levels" },
+  { id: "Beginner", label: "Beginner" },
+  { id: "Intermediate", label: "Intermediate" },
+  { id: "Advanced", label: "Advanced" },
+  { id: "All Levels", label: "Open to All" },
+];
 
 const videoSearchSchema = z.object({
-  level: z.enum(["All", "Beginner", "Intermediate", "Advanced", "All Levels"]).optional(),
+  level: z.string().optional(),
 });
 
 export const Route = createFileRoute("/videos")({
@@ -34,13 +47,15 @@ export const Route = createFileRoute("/videos")({
 
 function VideosPage() {
   const search = Route.useSearch();
-  const [selectedLevel, setSelectedLevel] = useState<string>(search.level ?? "All");
+  const [selectedLevel, setSelectedLevel] = useState<LevelFilterOption>(() =>
+    normalizeLevelFilter(search.level),
+  );
   const [playing, setPlaying] = useState<string | null>(null);
   const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
 
   useEffect(() => {
-    if (search.level) {
-      setSelectedLevel(search.level);
+    if (search.level !== undefined) {
+      setSelectedLevel(normalizeLevelFilter(search.level));
     }
   }, [search.level]);
 
@@ -64,10 +79,7 @@ function VideosPage() {
   const allVideos = useMemo(() => {
     const list = [...publishedVideos, ...videos];
     if (selectedLevel === "All") return list;
-    return list.filter(
-      (v) =>
-        v.level === selectedLevel || (selectedLevel === "All Levels" && v.level === "All Levels"),
-    );
+    return list.filter((v) => normalizeLevel(v.level) === selectedLevel);
   }, [publishedVideos, selectedLevel]);
 
   return (
@@ -87,14 +99,14 @@ function VideosPage() {
             </span>
             {videoLevels.map((lvl) => (
               <Button
-                key={lvl}
+                key={lvl.id}
                 type="button"
                 size="sm"
-                variant={selectedLevel === lvl ? "hero" : "glass"}
+                variant={selectedLevel === lvl.id ? "hero" : "glass"}
                 className="rounded-full"
-                onClick={() => setSelectedLevel(lvl)}
+                onClick={() => setSelectedLevel(lvl.id)}
               >
-                {lvl}
+                {lvl.label}
               </Button>
             ))}
           </div>

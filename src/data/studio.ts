@@ -12,6 +12,72 @@ import trainer2 from "@/assets/trainer-2.jpeg";
 
 export type Level = "Beginner" | "Intermediate" | "Advanced" | "All Levels";
 
+export function normalizeLevel(value: unknown): Level {
+  const normalized = String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, " ");
+
+  switch (normalized) {
+    case "basic":
+    case "beginner":
+      return "Beginner";
+
+    case "intermediate":
+    case "intermediate level":
+      return "Intermediate";
+
+    case "advance":
+    case "advanced":
+      return "Advanced";
+
+    case "all":
+    case "all level":
+    case "all levels":
+    case "open to all":
+      return "All Levels";
+
+    default:
+      return "All Levels";
+  }
+}
+
+export type LevelFilterOption = "All" | "Beginner" | "Intermediate" | "Advanced" | "All Levels";
+
+export function normalizeLevelFilter(value: unknown): LevelFilterOption {
+  const normalized = String(value ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, " ");
+
+  switch (normalized) {
+    case "all":
+    case "all classes":
+    case "all class":
+      return "All";
+
+    case "basic":
+    case "beginner":
+      return "Beginner";
+
+    case "intermediate":
+    case "intermediate level":
+      return "Intermediate";
+
+    case "advance":
+    case "advanced":
+      return "Advanced";
+
+    case "all level":
+    case "all levels":
+    case "open to all":
+      return "All Levels";
+
+    default:
+      return "All";
+  }
+}
+
 export type DanceStyle = {
   slug: string;
   name: string;
@@ -231,10 +297,26 @@ export const danceClasses: DanceClass[] = [
 export function normalizeClassImages(items: DanceClass[]): DanceClass[] {
   const localImages = new Map(danceClasses.map((item) => [item.id, item.image]));
   return items.map((item) => {
-    const image = String(item.image ?? "");
-    return image.includes("/") || image.startsWith("data:")
-      ? item
-      : { ...item, image: localImages.get(item.id) ?? bollywood };
+    const raw = item as Partial<DanceClass> & Record<string, unknown>;
+    const image = String(raw.image ?? "");
+    const id = String(raw.id ?? "");
+    return {
+      ...item,
+      id: id || "custom-class",
+      name: String(raw.name ?? raw["className"] ?? "Dance Class"),
+      style: String(raw.style ?? "All Styles"),
+      ageGroup: String(raw.ageGroup ?? "All ages"),
+      level: normalizeLevel(raw.level),
+      duration: String(raw.duration ?? "60 min"),
+      timing: String(raw.timing ?? "Regular Batch"),
+      trainer: String(raw.trainer ?? "Instructor"),
+      description: String(raw.description ?? ""),
+      price: typeof raw.price === "number" ? raw.price : Number(raw.price ?? 1000) || 1000,
+      image:
+        image.includes("/") || image.startsWith("data:")
+          ? image
+          : (localImages.get(id) ?? bollywood),
+    };
   });
 }
 

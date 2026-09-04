@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 import {
   danceClasses,
   normalizeClassImages,
+  normalizeLevel,
+  normalizeLevelFilter,
   videos,
-  type Level,
-  type VideoItem,
+  type DanceClass,
+  type LevelFilterOption,
 } from "@/data/studio";
 import { getContent, getMedia, type MediaItem } from "@/lib/submissions";
 import { createSeoHead } from "@/config/seo";
@@ -39,83 +41,87 @@ export const Route = createFileRoute("/classes")({
   component: ClassesPage,
 });
 
-const levels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"] as const;
-type LevelOption = (typeof levels)[number];
+const levelFilterOptions: { id: LevelFilterOption; label: string }[] = [
+  { id: "All", label: "All Classes" },
+  { id: "Beginner", label: "Beginner" },
+  { id: "Intermediate", label: "Intermediate" },
+  { id: "Advanced", label: "Advanced" },
+  { id: "All Levels", label: "All Levels" },
+];
 
 function ClassesPage() {
   const search = Route.useSearch();
-  const [classes, setClasses] = useState(danceClasses);
+  const [classes, setClasses] = useState<DanceClass[]>(() => normalizeClassImages(danceClasses));
   const [query, setQuery] = useState(search.q ?? "");
-  const [level, setLevel] = useState<LevelOption>(
-    levels.includes(search.level as LevelOption) ? (search.level as LevelOption) : "All",
-  );
+  const [level, setLevel] = useState<LevelFilterOption>(() => normalizeLevelFilter(search.level));
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [remoteMedia, setRemoteMedia] = useState<MediaItem[]>([]);
 
-  // Sync if URL search changes
+  // Sync if URL search changes (supporting ?level=basic, ?level=advance, etc.)
   useEffect(() => {
-    if (search.level && levels.includes(search.level as LevelOption)) {
-      setLevel(search.level as LevelOption);
+    if (search.level !== undefined) {
+      setLevel(normalizeLevelFilter(search.level));
     }
     if (search.q !== undefined) {
       setQuery(search.q);
     }
   }, [search.level, search.q]);
 
-  // Load published classes
+  // Load published classes from CMS / Google Sheets
   useEffect(() => {
-    void getContent("classes")
+    void getContent<DanceClass>("classes")
       .then((next) => {
-        if (next.length) setClasses(normalizeClassImages(next as typeof danceClasses));
+        if (next && next.length) {
+          setClasses(normalizeClassImages(next));
+        }
       })
       .catch(() => undefined);
   }, []);
 
-  // Load remote media
+  // Load remote media independently for video highlights
   useEffect(() => {
     void getMedia()
       .then(setRemoteMedia)
       .catch(() => undefined);
   }, []);
 
-  const publishedVideos: VideoItem[] = useMemo(() => {
-    return remoteMedia
+  // Filter classes based on selected level and query
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return classes.filter((c) => {
+      const normalizedClassLevel = normalizeLevel(c.level);
+      const matchesLevel = level === "All" || normalizedClassLevel === level;
+      const matchesQuery =
+        !q ||
+        [c.name, c.style, c.trainer, c.ageGroup, c.description].join(" ").toLowerCase().includes(q);
+      return matchesLevel && matchesQuery;
+    });
+  }, [classes, query, level]);
+
+  // Featured videos showcase - independent from class level filtering
+  const featuredVideos = useMemo(() => {
+    const remoteList = remoteMedia
       .filter((item) => item.kind === "video" && item.youtubeId)
       .map((item) => ({
         id: item.id,
         title: item.title,
-        category: item.category,
-        level: "All Levels" as Level,
+        category: item.category || "Video",
         youtubeId: item.youtubeId,
         thumbnail: item.thumbnailUrl,
+        level: undefined as string | undefined,
       }));
+
+    const staticList = videos.map((item) => ({
+      id: item.id,
+      title: item.title,
+      category: item.category,
+      youtubeId: item.youtubeId,
+      thumbnail: item.thumbnail,
+      level: item.level as string | undefined,
+    }));
+
+    return [...remoteList, ...staticList].slice(0, 6);
   }, [remoteMedia]);
-
-  const allVideos = useMemo(() => {
-    return [...publishedVideos, ...videos];
-  }, [publishedVideos]);
-
-  // Filter classes
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return classes.filter((c) => {
-      const matchesQuery =
-        !q ||
-        [c.name, c.style, c.trainer, c.ageGroup, c.description].join(" ").toLowerCase().includes(q);
-      const matchesLvl = level === "All" || c.level === level;
-      return matchesQuery && matchesLvl;
-    });
-  }, [classes, query, level]);
-
-  // Videos corresponding to the selected level
-  const levelVideos = useMemo(() => {
-    if (level === "All") {
-      return allVideos.slice(0, 6);
-    }
-    return allVideos.filter(
-      (v) => v.level === level || (level === "All Levels" && v.level === "All Levels"),
-    );
-  }, [allVideos, level]);
 
   return (
     <>
@@ -130,16 +136,16 @@ function ClassesPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Level Filter Tabs */}
           <div className="flex flex-wrap items-center gap-2">
-            {levels.map((lvl) => (
+            {levelFilterOptions.map((opt) => (
               <Button
-                key={lvl}
+                key={opt.id}
                 type="button"
                 size="sm"
-                variant={level === lvl ? "hero" : "glass"}
+                variant={level === opt.id ? "hero" : "glass"}
                 className="rounded-full px-4 text-xs font-medium"
-                onClick={() => setLevel(lvl)}
+                onClick={() => setLevel(opt.id)}
               >
-                {lvl === "All" ? "All Classes" : lvl}
+                {opt.label}
               </Button>
             ))}
           </div>
@@ -178,7 +184,7 @@ function ClassesPage() {
 
         {results.length === 0 ? (
           <div className="mt-12 text-center">
-            <p className="text-base font-semibold">No classes match that search.</p>
+            <p className="text-base font-semibold">No classes match that filter or search.</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Try selecting &ldquo;All Classes&rdquo; or clearing the search box.
             </p>
@@ -197,31 +203,23 @@ function ClassesPage() {
           </div>
         ) : null}
 
-        {/* Level Video Showcase (In-page preview without navigation) */}
+        {/* Studio Video Highlights (Independent from class level filters) */}
         <div className="mt-20 border-t border-border pt-12">
           <div className="flex flex-col gap-2">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-gold">
               <Video className="size-3.5" />
-              {level === "All" ? "Level Highlights" : `${level} Level Showcase`}
+              Studio Highlights
             </div>
             <h2 className="mt-2 font-display text-3xl uppercase tracking-wide">
-              {level === "All"
-                ? "Featured Class & Choreography Videos"
-                : `${level} Category Videos`}
+              Featured Class &amp; Choreography Videos
             </h2>
             <p className="text-sm text-muted-foreground">
-              {level === "Advanced"
-                ? "Watch high-intensity choreography drills, masterclass routines and advanced cyphers."
-                : level === "Intermediate"
-                  ? "See technical floorwork, transitions and expressive student choreography."
-                  : level === "Beginner"
-                    ? "Check out foundational rhythm routines, basic steps and beginner showcase reels."
-                    : "See what our dancers achieve across all experience levels."}
+              Watch choreography reels, student routines, and studio sessions from our classes.
             </p>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {levelVideos.map((v, i) => (
+            {featuredVideos.map((v, i) => (
               <Reveal key={v.id} delay={i * 50}>
                 <article className="glass-panel overflow-hidden rounded-2xl">
                   <div className="relative aspect-video bg-muted">
@@ -273,12 +271,14 @@ function ClassesPage() {
                       <span className="text-xs font-semibold uppercase tracking-[0.16em] text-gold">
                         {v.category}
                       </span>
-                      <Badge
-                        variant={v.level === "Advanced" ? "hero" : "secondary"}
-                        className="rounded-md text-[0.65rem]"
-                      >
-                        {v.level}
-                      </Badge>
+                      {v.level ? (
+                        <Badge
+                          variant={v.level === "Advanced" ? "hero" : "secondary"}
+                          className="rounded-md text-[0.65rem]"
+                        >
+                          {v.level}
+                        </Badge>
+                      ) : null}
                     </div>
                     <h3 className="mt-1 font-display text-lg uppercase tracking-wide">{v.title}</h3>
                   </div>
@@ -287,9 +287,9 @@ function ClassesPage() {
             ))}
           </div>
 
-          {levelVideos.length === 0 ? (
+          {featuredVideos.length === 0 ? (
             <p className="mt-6 text-center text-sm text-muted-foreground">
-              No videos currently listed for {level} level.
+              No videos currently listed.
             </p>
           ) : null}
         </div>
